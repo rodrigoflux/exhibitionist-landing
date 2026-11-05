@@ -73,7 +73,7 @@ nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--sheet) 9
 nav .navbar{height:68px;display:flex;align-items:center;gap:40px;padding:0 var(--mpad) 0 var(--pad)}
 nav .nav-acts{margin-left:auto;display:flex;gap:10px;align-items:center}
 .logo{display:flex;align-items:center;gap:10px;font:500 24px/1 var(--serif);letter-spacing:-.025em;text-decoration:none}
-.badge{display:grid;place-items:center;border-radius:50%;background:#fffdf8;border:1.5px solid var(--accent);overflow:hidden;flex:none}
+.badge{display:grid;place-items:center;border-radius:50%;overflow:hidden;flex:none}
 .badge img{width:78%;height:78%;object-fit:contain;transform:translateY(6%)}
 .logo .badge{width:38px;height:38px}
 .navlinks{display:flex;gap:26px;align-items:center;font-size:15px}
@@ -362,6 +362,34 @@ nav a.btn-primary,nav a.btn-primary:hover{color:var(--paper);text-decoration:non
   .tour-cap{position:fixed;left:12px;right:12px;bottom:12px;z-index:30;margin:0;background:#16202e;border-color:#2c3545;box-shadow:0 12px 32px -8px rgba(0,0,0,.45);font-size:14px}
 }
 @media (prefers-reduced-motion:reduce){.tour-cap,.tc-text.swap{transition:none;animation:none}}
+/* phone: the workbench fits one screen, with Exhibits / Pages panes */
+.wb-panes{display:none}
+@media(max-width:700px){
+  .demo .try{display:none}
+  .demo-box{display:flex;flex-direction:column;height:calc(100svh - 150px);min-height:500px;max-height:760px}
+  .wb-bar{padding:8px 10px;gap:8px}
+  .wb-case .dots,.wb-case small{display:none}
+  .wb-case b{font-size:15px}
+  .wb-tools .xbtn{min-height:28px;padding:0 8px}
+  .wb-panes{display:flex;order:3;width:100%;gap:0;border:1px solid #cfc6b4;border-radius:4px;overflow:hidden}
+  .wb-panes .xbtn{flex:1;justify-content:center;border:0;border-radius:0;min-height:30px;background:var(--p)}
+  .wb-panes .xbtn[aria-selected="true"]{background:var(--i);color:#fff}
+  .demo .wb-body{flex:1;min-height:0;display:block;height:auto}
+  .demo-box[data-pane="table"] .wb-side{display:none}
+  .demo-box[data-pane="side"] .wb-table{display:none}
+  .demo .wb-table,.demo-box .wb-table{height:100%;max-height:none!important;overflow:auto;border-bottom:0}
+  .demo .wb-side{height:100%;overflow-y:auto}
+  .demo .wbt{min-width:0!important;width:100%;table-layout:fixed}
+  .wbt th:nth-child(2){width:24px}.wbt th:nth-child(3){width:58px}.wbt th:nth-child(6){width:44px}.wbt th:nth-child(7){width:34px}
+  .wbt tr.xr .note,.wbt tr.xr .name{overflow-wrap:anywhere}
+  .wbt tr.xr:not(.sel) .note{max-width:none}
+  .wbt th:nth-child(1),.wbt td.h,.wbt th:nth-child(5),.wbt tr.xr td:nth-child(5){width:0!important;padding:0!important;font-size:0;overflow:hidden;border-left:0;border-right:0}
+  .wb-foot{padding:8px 10px;font-size:12px;gap:6px 10px}
+  #wbStats{display:none}
+  .demo .docs{max-height:none}
+  .demo .pv-stage{height:200px}
+  .demo .pv-page{width:140px}
+}
 /* III. features as ruled entries */
 .entries{margin-top:56px}
 .entry{display:grid;grid-template-columns:var(--key) minmax(0,1fr) var(--mar);border-top:1px solid var(--rule);padding:34px 0 36px}
@@ -450,14 +478,14 @@ code{font:400 .86em/1 var(--mono);background:var(--paper-2);padding:2px 6px;bord
 .tally span{color:var(--ink-2);font-size:14px;line-height:1.4}
 
 /* VII. close */
-.final .badge{width:72px;height:72px;border-width:2px;box-shadow:var(--shadow);margin-bottom:22px}
+.final .badge{width:72px;height:72px;margin-bottom:22px}
 .final h2{font-size:clamp(36px,4.6vw,60px);max-width:18ch}
 .final .lede{margin-top:22px}
 .final .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
 .final .m{align-self:end}
 footer.row{border-top:1px solid var(--rule);padding:20px 0;font-size:14px;color:var(--muted);align-items:center}
 footer .k{padding-top:0}
-footer .badge{width:26px;height:26px;border-width:1px}
+footer .badge{width:26px;height:26px}
 footer .b{display:flex;gap:12px;align-items:center;color:var(--ink-2)}
 
 /* ---- narrow: the keyline stays, the margin folds under the text ---- */
@@ -598,15 +626,16 @@ footer .b{display:flex;gap:12px;align-items:center;color:var(--ink-2)}
       <li><b>1</b><span>Click a page, then ✕ to exclude it</span></li>
       <li><b>2</b><span>Confirm documents, then the exhibit</span></li>
       <li><b>3</b><span>Drag ⋮⋮ to reorder</span></li>
-      <li><b>4</b><span>Double-click a name to edit</span></li>
-      <li><b>5</b><span><kbd>⌘Z</kbd> / <kbd>Ctrl Z</kbd> to undo</span></li>
-      <li><b>6</b><span>Open the TOC</span></li>
+      <li><b>4</b><span><kbd>⌘Z</kbd> / <kbd>Ctrl Z</kbd> to undo</span></li>
+      <li><b>5</b><span>Open the TOC</span></li>
+      <li><b>6</b><span>Confirm everything to print</span></li>
     </ol>
   </div>
   <div class="wbwrap">
-    <div class="demo-box" id="wb">
+    <div class="demo-box" id="wb" data-pane="table">
       <div class="wb-bar">
         <div class="wb-case"><div class="dots"><i></i><i></i><i></i></div><div><b>Demo petitioner · I-140 EB-1A</b><small>Case 2026-014 · Table of exhibits</small></div></div>
+        <div class="wb-panes" role="tablist" aria-label="Demo view"><button type="button" class="xbtn" data-pane="table" aria-selected="true">Exhibits</button><button type="button" class="xbtn" data-pane="side" aria-selected="false">Pages</button></div>
         <div class="wb-tools">
           <button class="xbtn" data-act="undo" title="Undo (Ctrl/Cmd+Z)">↶ Undo</button>
           <button class="xbtn" data-act="toc">TOC</button>
@@ -879,7 +908,7 @@ footer .b{display:flex;gap:12px;align-items:center;color:var(--ink-2)}
               <td class="h" title="${drag?'Drag to reorder':'Confirmed exhibits are locked'}">${drag?'⋮⋮':''}</td>
               <td><i class="st st-${st}" title="${LABEL[st]}"></i></td>
               <td class="num">${d.num||'—'}</td>
-              <td><span class="name" data-edit="name" title="Double-click to edit">${esc(e.name)}</span><span class="note${same?' ditto-same':''}" data-edit="note" title="Double-click to edit">${esc(e.note)}${prev&&!same?`<button class="ditto" data-act="ditto" title="Copy the previous exhibit's relevance note">″</button>`:''}</span></td>
+              <td><span class="name">${esc(e.name)}</span><span class="note${same?' ditto-same':''}">${esc(e.note)}${prev&&!same?`<button class="ditto" data-act="ditto" title="Copy the previous exhibit's relevance note">″</button>`:''}</span></td>
               <td class="r">${e.excluded?'—':incPages(e)}</td>
               <td class="r" data-start="${e.id}">${d.start??'—'}</td>
               <td><button class="ico" data-act="exclude" title="${e.excluded?'Restore exhibit to the filing':'Exclude exhibit from the filing'}">${e.excluded?I_RES:I_EXC}</button></td></tr>`})})});
@@ -915,7 +944,10 @@ footer .b{display:flex;gap:12px;align-items:center;color:var(--ink-2)}
             <div class="pv-foot"><span>Exh ${d.num} - ${esc(d.cat)} - ${esc(e.name)}</span><span>${abs?'Exh p.'+abs:''}</span></div></div></div>
           <div class="pv-bar"><button data-act="rotl">↺ Rotate</button><button data-act="rotr">↻ Rotate</button><button data-act="poff">${pg.off?'+ Include page':'✕ Exclude page'}</button></div></div>`;
       } else h+=`<div class="pv"><div class="pv-stage"><div class="pv-empty">${e.excluded?'Excluded exhibits have no pages in the packet.':'Select a page to preview it with its filing labels.'}</div></div></div>`;
+      const keep=side.querySelector('.docs'), kTop=keep?keep.scrollTop:0, kId=side.dataset.ex, rails=[...side.querySelectorAll('.rail')].map(r=>r.scrollLeft);
       side.innerHTML=h;
+      if(kId==String(e.id)){const d2=side.querySelector('.docs');if(d2)d2.scrollTop=kTop;side.querySelectorAll('.rail').forEach((r,i)=>{if(rails[i])r.scrollLeft=rails[i]})}
+      side.dataset.ex=e.id;
     }
     function renderFoot(D){
       const g=$('#wbGate'), empty=D.inc.filter(e=>!e.docs.length).length;
@@ -980,18 +1012,6 @@ footer .b{display:flex;gap:12px;align-items:center;color:var(--ink-2)}
       });
     }
     box.addEventListener('keydown',ev=>{const th=ev.target.closest('.th');if(th&&(ev.key==='Enter'||ev.key===' ')){ev.preventDefault();th.click()}if(ev.key==='Escape'&&!$('#wbModal').hidden)$('#wbModal').hidden=true});
-    // inline edit: Enter saves, Escape cancels
-    box.addEventListener('dblclick',ev=>{
-      const el=ev.target.closest('[data-edit]'); if(!el) return;
-      const tr=el.closest('tr.xr'), e=find(+tr.dataset.id).e, field=el.dataset.edit, orig=e[field];
-      el.textContent=orig; el.contentEditable='true'; el.focus();
-      const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);
-      let done=false;
-      const finish=save=>{if(done)return;done=true;el.contentEditable='false';const v=el.textContent.trim();
-        if(save&&v&&v!==orig)commit(field==='name'?'Edit exhibit name':'Edit relevance note',()=>{e[field]=v;reopen(e,'Edited')});else render()};
-      el.addEventListener('keydown',k=>{if(k.key==='Enter'){k.preventDefault();finish(true)}if(k.key==='Escape'){k.preventDefault();finish(false)}k.stopPropagation()});
-      el.addEventListener('blur',()=>finish(true),{once:true});
-    });
     // drag to reorder (unconfirmed, included exhibits only)
     let dragId=null;
     const rowsEl=$('#wbRows');
@@ -1019,6 +1039,12 @@ footer .b{display:flex;gap:12px;align-items:center;color:var(--ink-2)}
     const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
     const ring=document.createElement('div'); ring.className='tour-ring'; ring.hidden=true; ring.setAttribute('aria-hidden','true'); box.appendChild(ring);
     const cap=document.getElementById('tourCap');
+    const narrow=matchMedia('(max-width:700px)');
+    function setPane(p){ if(box.dataset.pane===p) return; box.dataset.pane=p; box.querySelectorAll('.wb-panes [data-pane]').forEach(b=>b.setAttribute('aria-selected',b.dataset.pane===p)); }
+    box.addEventListener('click',e=>{
+      const b=e.target.closest('.wb-panes [data-pane]'); if(b){ setPane(b.dataset.pane); return; }
+      if(narrow.matches&&e.target.closest('tr.xr')&&!e.target.closest('[data-act]')) setPane('side');
+    });
     let run=0;
     const wait=(ms,tok)=>new Promise((res,rej)=>setTimeout(()=>tok===run?res():rej('stopped'),reduced?Math.min(ms,600):ms));
     const fire=(el,type,init)=>el&&el.dispatchEvent(new (type.startsWith('drag')?DragEvent:MouseEvent)(type,Object.assign({bubbles:true,cancelable:true},init)));
@@ -1030,63 +1056,86 @@ footer .b{display:flex;gap:12px;align-items:center;color:var(--ink-2)}
       cap.querySelector('button').hidden=!!final;
       cap.classList.add('on');
     }
-    function point(el){
-      if(!el) return;
-      const sc=el.closest('.wb-table,.docs,.rail');
-      if(sc){const a=sc.getBoundingClientRect(),r=el.getBoundingClientRect();
-        if(r.top<a.top+30||r.bottom>a.bottom-10) sc.scrollTop+=r.top-a.top-a.height/3;
-        if(r.left<a.left||r.right>a.right) sc.scrollLeft+=r.left-a.left-20;}
+    // the ring follows a target getter, so it stays on the control even after the demo re-renders
+    let aimAt=null;
+    function place(scroll){
+      const el=aimAt&&aimAt(); if(!el||!el.isConnected){ return; }
+      if(narrow.matches){ if(el.closest('.wb-side')) setPane('side'); else if(el.closest('.wb-table')) setPane('table'); }
+      if(scroll){
+        // bring the target into view inside every scrolling panel it sits in (never the page)
+        let n=el.parentElement;
+        while(n&&n!==box){
+          if(n.scrollWidth>n.clientWidth+1||n.scrollHeight>n.clientHeight+1){
+            const a=n.getBoundingClientRect(),r=el.getBoundingClientRect();
+            if(n.scrollHeight>n.clientHeight+1&&(r.top<a.top+30||r.bottom>a.bottom-10)) n.scrollTop+=r.top-a.top-a.height/3;
+            if(n.scrollWidth>n.clientWidth+1&&(r.left<a.left+4||r.right>a.right-4)) n.scrollLeft+=r.left-a.left-20;
+          }
+          n=n.parentElement;
+        }}
       const b=box.getBoundingClientRect(),r=el.getBoundingClientRect();
       Object.assign(ring.style,{left:r.left-b.left-4+'px',top:r.top-b.top-4+'px',width:r.width+8+'px',height:r.height+8+'px'});
       ring.hidden=false;
     }
-    async function tap(get,tok,after){
-      point(get()); await wait(1300,tok);
+    const point=get=>{ aimAt=typeof get==='function'?get:()=>get; place(true); };
+    setInterval(()=>{ if(box.classList.contains('touring')) place(false); },120);
+    async function tap(get,tok,after,aim){
+      point(get); await wait(aim||1300,tok);
       const el=get(); ring.classList.remove('press'); void ring.offsetWidth; ring.classList.add('press');
-      fire(el,'click'); await wait(after||1500,tok);
+      fire(el,'click'); requestAnimationFrame(()=>place(true)); await wait(after||1500,tok);
     }
     const row=n=>[...box.querySelectorAll('tr.xr')].find(tr=>tr.querySelector('.name').textContent.startsWith(n));
-    function end(keep){ring.hidden=true;steps.forEach(li=>li.classList.remove('on'));box.classList.remove('touring');if(!keep)cap.classList.remove('on')}
+    function end(keep){ring.hidden=true;aimAt=null;steps.forEach(li=>li.classList.remove('on'));box.classList.remove('touring');if(!keep)cap.classList.remove('on')}
     async function play(){
       const tok=++run; box.classList.add('touring');
       try{
         if(!q('#wbModal').hidden) fire(q('[data-act=close]'),'click');
         fire(q('[data-act=reset]'),'click'); await wait(700,tok);
         // 1. exclude a duplicate page
-        say(0,'This page is in here twice. Let\'s pick it…');
+        say(0,'Page 4 of this document is a duplicate. Select it…');
         await tap(()=>q('.th[data-d="1"][data-p="3"]'),tok,1400);
-        say(0,'…and take it out of the packet.');
+        say(0,'…and exclude it from the packet.');
         await tap(()=>q('.th[data-d="1"][data-p="3"] [data-act=off]'),tok,1800);
-        say(0,'One page fewer. All the page numbers after it fixed themselves.');
-        point(row('Feature profile').querySelector('[data-start]')); await wait(3600,tok);
+        say(0,'The packet is one page shorter, and every later exhibit\'s starting page updated automatically.');
+        point(()=>row('Feature profile').querySelector('[data-start]')); await wait(3600,tok);
         // 2. confirm documents, then the exhibit
-        say(1,'First, we check each document and say it looks good.');
+        say(1,'Review each supporting document and confirm it.');
         await tap(()=>q('.dconf[data-d="0"]'),tok,1100);
         await tap(()=>q('.dconf[data-d="1"]'),tok,1500);
-        say(1,'Both look good. Now we can OK the whole exhibit.');
+        say(1,'With both documents confirmed, confirm the exhibit.');
         await tap(()=>q('.cbtn[data-act=cex]'),tok,1400);
-        say(1,'Done! One less thing left to check.');
-        point(q('#wbGate')); await wait(3200,tok);
+        say(1,'Exhibit confirmed. One fewer item left before printing.');
+        point(()=>q('#wbGate')); await wait(3200,tok);
         // 3. drag to reorder
-        say(2,'Now let\'s move this exhibit up the list…');
+        say(2,'Drag an exhibit to reorder it…');
         const src=row('Judge'), dst=row('Feature profile');
-        point(src.querySelector('.h')); await wait(1800,tok);
+        point(()=>{const h=row('Judge').querySelector('.h');return h.offsetParent?h:row('Judge')}); await wait(1800,tok);
         const dt=new DataTransfer();
         fire(src,'dragstart',{dataTransfer:dt});
-        point(dst); await wait(1300,tok);
+        point(()=>row('Feature profile')); await wait(1300,tok);
         const y=dst.getBoundingClientRect().top+3;
         fire(dst,'dragover',{dataTransfer:dt,clientY:y}); await wait(500,tok);
         fire(dst,'drop',{dataTransfer:dt,clientY:y}); fire(q('#wbRows'),'dragend',{dataTransfer:dt});
-        say(2,'It\'s number 1 now. Every number below it changed by itself.');
-        point(row('Judge')); await wait(3600,tok);
+        say(2,'It\'s now I.B.1. The numbers and pages below it updated on their own.');
+        point(()=>row('Judge')); await wait(3600,tok);
         // 5. undo
-        say(4,'Oops? Undo puts it back the way it was.');
+        say(3,'Made a mistake? Undo restores the previous order.');
         await tap(()=>q('[data-act=undo]'),tok,2600);
         // 6. table of exhibits
-        say(5,'Here\'s the list of every exhibit. It says DRAFT until everything is checked.');
-        await tap(()=>q('[data-act=toc]'),tok,5200);
-        fire(q('[data-act=close]'),'click');
-        end(true); say(-1,'Your turn! Click anything to try it.',true);
+        say(4,'The table of exhibits is always current. It stays marked DRAFT until everything is confirmed.');
+        await tap(()=>q('[data-act=toc]'),tok,4200);
+        fire(q('[data-act=close]'),'click'); await wait(600,tok);
+        // 7. finish: OK what's left, leave the empty one out -> ready to print
+        say(5,'Confirm the remaining exhibits.');
+        await tap(()=>row('Judge').querySelector('.name'),tok,500,700);
+        await tap(()=>q('.doc:not(.conf) .dconf'),tok,500,700);
+        await tap(()=>q('.cbtn[data-act=cex]:not(.reopen)'),tok,600,700);
+        await tap(()=>row('Personal statement').querySelector('.name'),tok,500,700);
+        await tap(()=>q('.cbtn[data-act=cex]:not(.reopen)'),tok,600,700);
+        say(5,'This exhibit has no documents yet, so exclude it for now.');
+        await tap(()=>row('Engagement letters').querySelector('[data-act=exclude]'),tok,1000);
+        say(5,'Everything is confirmed. The DRAFT mark is gone and the packet is ready to print.');
+        point(()=>q('#wbGate')); await wait(3200,tok);
+        end(true); say(-1,'Your turn. Click anything in the workbench to try it.',true);
         setTimeout(()=>{ if(tok===run&&!box.classList.contains('touring')) cap.classList.remove('on') },6000);
       }catch(e){ if(tok===run) end(); }
     }
