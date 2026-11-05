@@ -378,7 +378,9 @@ nav a.btn-primary,nav a.btn-primary:hover{color:var(--paper);text-decoration:non
   .demo-box[data-pane="table"] .wb-side{display:none}
   .demo-box[data-pane="side"] .wb-table{display:none}
   .demo .wb-table,.demo-box .wb-table{height:100%;max-height:none!important;overflow:auto;border-bottom:0}
-  .demo .wb-side{height:100%;overflow-y:auto}
+  .demo .wb-side{height:100%;overflow-y:auto;display:block}
+  .demo .wb-side .docs{overflow:visible;flex:none}
+  .demo .wb-side .pv{margin-top:8px}
   .demo .wbt{min-width:0!important;width:100%;table-layout:fixed}
   .wbt th:nth-child(2){width:24px}.wbt th:nth-child(3){width:58px}.wbt th:nth-child(6){width:44px}.wbt th:nth-child(7){width:34px}
   .wbt tr.xr .note,.wbt tr.xr .name{overflow-wrap:anywhere}
@@ -1107,7 +1109,7 @@ footer .b{display:flex;gap:12px;align-items:center;color:var(--ink-2)}
         // 3. drag to reorder
         say(2,'Drag an exhibit to reorder it…');
         const src=row('Judge'), dst=row('Feature profile');
-        point(()=>{const h=row('Judge').querySelector('.h');return h.offsetParent?h:row('Judge')}); await wait(1800,tok);
+        point(()=>{const h=row('Judge').querySelector('.h');return h.offsetWidth>6?h:row('Judge').querySelector('.name')}); await wait(1800,tok);
         const dt=new DataTransfer();
         fire(src,'dragstart',{dataTransfer:dt});
         point(()=>row('Feature profile')); await wait(1300,tok);
