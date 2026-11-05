@@ -1,0 +1,1005 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exhibitionist — Exhibit packets that number themselves</title>
+<meta name="description" content="Exhibitionist assembles immigration petition exhibit packets from one canonical source: numbering, pagination, table of exhibits, and letter citations that never drift.">
+<link rel="icon" type="image/png" href="assets/logo-96.png">
+<link rel="apple-touch-icon" href="assets/logo-256.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f6f3ec; --paper-2:#efeadf; --card:#fffdf8; --ink:#16202e; --ink-2:#3c4656; --muted:#6b7380;
+  --rule:#d9d2c3; --accent:#b3261e; --accent-soft:#f5dcd8; --navy:#1d2c45; --ok:#2f6b4f; --ok-soft:#dcebe2;
+  --desk:var(--paper-2); --sheet:var(--card);
+  --shadow:0 1px 0 rgba(22,32,46,.04),0 12px 32px -12px rgba(22,32,46,.18);
+  --sheet-shadow:0 2px 4px rgba(22,32,46,.04),0 40px 80px -40px rgba(22,32,46,.28);
+  --serif:Georgia,serif; --sans:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  --key:0px; --mar:340px; --pad:48px; --mpad:32px;
+  color-scheme:only light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:72px;scrollbar-color:var(--rule) var(--desk)}
+body{background:var(--desk);color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden;caret-color:var(--accent)}
+::selection{background:var(--accent-soft);color:var(--ink)}
+a{color:inherit;text-underline-offset:3px;text-decoration-thickness:1px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+h1,h2,h3{font-family:var(--serif);font-weight:500;letter-spacing:-.035em;line-height:1.04;text-wrap:balance}
+h3{letter-spacing:-.025em;line-height:1.1}
+h2{font-size:clamp(34px,4.6vw,56px)}
+h2 em,h1 em{font-style:normal;color:var(--accent)}
+p{text-wrap:pretty}
+.lede{font-size:clamp(18px,1.6vw,20px);line-height:1.55;color:var(--ink-2);max-width:60ch}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:4px;font:650 15px/1 var(--sans);text-decoration:none;transition:transform .15s,background .15s,box-shadow .15s,border-color .15s;cursor:pointer;border:0}
+.btn-primary{background:var(--ink);color:var(--paper)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+.btn-ghost{color:var(--ink);border:1px solid var(--rule);background:transparent}
+.btn-ghost:hover{border-color:var(--ink)}
+.btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---- the sheet: one proof, one keyline, one margin ---- */
+.sheet{position:relative;max-width:1320px;margin:20px auto 56px;background:var(--sheet);box-shadow:var(--sheet-shadow)}
+
+section .m:not(:empty){border-left:1px dashed color-mix(in srgb,var(--accent) 38%,var(--rule))}
+.row{display:grid;grid-template-columns:var(--key) minmax(0,1fr) var(--mar);position:relative;z-index:1}
+.k{visibility:hidden;overflow:hidden;padding:0!important;width:0;min-width:0}
+.b{padding:0 var(--pad);min-width:0}
+.m{padding:0 var(--mpad);min-width:0}
+section.row{padding:64px 0}
+.rule-top{border-top:1px solid var(--rule)}
+.mlabel{font:650 11.5px/1.3 var(--sans);color:var(--muted);letter-spacing:.02em}
+.mnote{font:500 19px/1.3 var(--serif);letter-spacing:-.01em;color:var(--accent)}
+.mnote small{display:block;font:650 11.5px/1.3 var(--sans);letter-spacing:.02em;color:var(--muted);margin-bottom:6px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--sheet) 95%,transparent);border-bottom:1px solid var(--rule)}
+nav .navbar{height:68px;display:flex;align-items:center;gap:40px;padding:0 var(--mpad) 0 var(--pad)}
+nav .navbar .btn{margin-left:auto}
+.logo{display:flex;align-items:center;gap:10px;font:500 24px/1 var(--serif);letter-spacing:-.025em;text-decoration:none}
+.badge{display:grid;place-items:center;border-radius:50%;background:#fffdf8;border:1.5px solid var(--accent);overflow:hidden;flex:none}
+.badge img{width:78%;height:78%;object-fit:contain;transform:translateY(6%)}
+.logo .badge{width:38px;height:38px}
+.navlinks{display:flex;gap:26px;align-items:center;font-size:15px}
+.navlinks a{text-decoration:none;color:var(--ink-2)}
+.navlinks a:hover{color:var(--ink);text-decoration:underline}
+nav .m{display:flex;justify-content:flex-end}
+nav .btn{padding:11px 18px}
+nav a.btn-primary,nav a.btn-primary:hover{color:var(--paper);text-decoration:none}
+@media(max-width:1080px){.navlinks a:nth-child(n+4){display:none}}
+
+/* hero: the copy beside one proof page */
+.hero{display:grid;grid-template-columns:var(--key) minmax(0,1fr) minmax(0,600px);padding:56px 0 0;position:relative;z-index:1;overflow-x:clip}
+.hero .copy{padding:0 32px 0 var(--pad);min-width:0;align-self:center}
+.hero h1{font-size:clamp(44px,5.4vw,80px);letter-spacing:-.04em;line-height:.98;max-width:10ch}
+.hero .lede{margin-top:24px;max-width:46ch;font-size:clamp(17px,1.4vw,19px)}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.hero .fine{margin-top:16px;font-size:14px;color:var(--muted)}
+.proof-page{position:relative;margin-right:var(--mpad);align-self:center}
+.proof-page::before{content:"";position:absolute;inset:0;background:var(--sheet);border:1px solid var(--rule);border-radius:4px;transform:rotate(2.2deg) translate(10px,8px);opacity:.7;box-shadow:var(--shadow)}
+.pp{position:relative;background:var(--sheet);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow);padding:26px 26px 18px}
+.pp h4{font:500 19px/1.2 var(--serif);letter-spacing:-.015em;text-align:center;margin-bottom:14px}
+.toc{width:100%;border-collapse:collapse;font-size:14px}
+.toc th{font:700 11px/1.2 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;padding:0 6px 8px;border-bottom:1px solid var(--rule)}
+.toc th:last-child{text-align:right}
+.toc td{padding:9px 6px;border-bottom:1px solid var(--rule);vertical-align:middle}
+.toc td:first-child{font:400 12px/1 var(--mono);color:var(--navy);white-space:nowrap;width:76px}
+.toc td:last-child{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.toc .cat{color:var(--muted)}
+.toc .pg{display:inline-block;border-radius:3px;padding:1px 5px;margin:-1px -5px}
+.pg s{color:var(--accent);text-decoration-thickness:1.5px;margin-right:7px;opacity:.85}
+.pg.tick{animation:tick .7s ease}
+@keyframes tick{0%{transform:translateY(-60%);opacity:0;background:var(--accent-soft);color:var(--accent)}35%{transform:none;opacity:1;background:var(--accent-soft);color:var(--accent)}100%{background:transparent}}
+.toc tr td{transition:background .35s}
+.toc tr.hot td{background:color-mix(in srgb,var(--accent-soft) 55%,transparent)}
+.chip{display:inline-block;margin-left:8px;padding:2px 7px;border-radius:999px;font:700 11px/1.3 var(--sans);color:var(--accent);background:var(--accent-soft);opacity:0;transform:translateX(-4px);transition:opacity .3s,transform .3s;white-space:nowrap;vertical-align:1px}
+.chip.on{opacity:1;transform:none}
+.chip.restore{color:var(--ok);background:var(--ok-soft)}
+.sheet-log{list-style:none;margin:14px 0 0;display:grid;gap:6px;min-height:72px;align-content:start}
+.sheet-log li{display:flex;gap:10px;align-items:baseline;font:500 15px/1.3 var(--serif);color:var(--accent);animation:logIn .45s cubic-bezier(.2,.8,.2,1) both}
+.sheet-log li.g{color:var(--ok)}
+.sheet-log li:not(:first-child){opacity:.55}
+.sheet-log time{margin-left:auto;font:600 11px/1 var(--sans);color:var(--muted);font-variant-numeric:tabular-nums;flex:none}
+@keyframes logIn{from{opacity:0;transform:translateY(5px)}}
+.sheet-foot{margin-top:14px;display:flex;justify-content:space-between;gap:12px;font:650 11px/1.3 var(--sans);color:var(--accent)}
+.sheet-foot span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sheet-foot span:last-child{flex:none}
+.pp .stamp{position:absolute;right:-16px;top:-20px;background:color-mix(in srgb,var(--sheet) 85%,transparent)}
+/* stamp */
+.stamp{display:inline-grid;transform:rotate(-4deg);transform-origin:40% 50%;border:2px solid var(--ok);color:var(--ok);font:750 13px/1 var(--sans);letter-spacing:.1em;padding:10px 13px;border-radius:4px;transition:color .25s,border-color .25s}
+.pp .stamp{transform:rotate(7deg)}
+.stamp > span{grid-area:1/1;transition:opacity .25s;text-align:center}
+.stamp .draft-t{opacity:0}
+.stamp.is-draft{border-color:var(--accent);color:var(--accent)}
+.stamp.is-draft .ok-t{opacity:0}.stamp.is-draft .draft-t{opacity:1}
+.stamp.thump{animation:thump .55s cubic-bezier(.2,.9,.3,1.3)}
+@keyframes thump{0%{transform:rotate(12deg) scale(1.7);opacity:0}60%{transform:rotate(6deg) scale(.95);opacity:1}100%{transform:rotate(7deg) scale(1)}}
+/* closing sign-off box */
+.signoff{border:1px solid var(--rule);background:var(--sheet);padding:22px 22px 24px;position:relative}
+.signoff .mlabel{display:block;margin-bottom:16px}
+.signoff p{margin-top:16px;font-size:14px;color:var(--ink-2);line-height:1.5}
+.signoff .sig{margin-top:22px;display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--ink-2);padding-top:8px;font:600 11px/1.3 var(--sans);color:var(--muted)}
+/* intro: rows set in once */
+.proof.play #heroToc tr{animation:rowIn .55s calc(.2s + var(--i)*80ms) cubic-bezier(.2,.8,.2,1) both}
+@keyframes rowIn{from{opacity:0;transform:translateY(6px)}}
+.proof.play .pp .stamp:not(.thump){animation:thump .55s 1s cubic-bezier(.2,.9,.3,1.3) both}
+@media (prefers-reduced-motion:reduce){.proof *,.proof{animation:none!important;transition:none!important}}
+@media(max-width:1080px){.hero{grid-template-columns:var(--key) minmax(0,1fr) minmax(0,470px)}}
+
+/* templates line */
+.forms-line{padding:20px 0 22px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin-top:40px}
+.forms-line .b{grid-column:2/4;display:flex;flex-wrap:wrap;gap:8px 22px;align-items:baseline;font:600 14px/1.3 var(--sans);color:var(--ink-2)}
+.forms-line .lbl{color:var(--muted);font-weight:500}
+
+/* I. problem */
+.story{margin-top:28px;max-width:66ch}
+.story p{color:var(--ink-2);margin-bottom:18px}
+.story p strong{color:var(--ink);font-weight:650}
+.pull{font:500 clamp(22px,2.1vw,27px)/1.25 var(--serif);letter-spacing:-.02em;color:var(--ink);margin:22px 0 20px;text-indent:-.42em}
+.chain{list-style:none;display:grid;gap:0;margin-top:14px;counter-reset:c}
+.chain li{display:grid;grid-template-columns:28px 1fr;gap:10px;padding:13px 0;border-top:1px solid var(--rule);font-size:15px;line-height:1.45;color:var(--ink-2)}
+.chain li:last-child{border-bottom:1px solid var(--rule)}
+.chain .n{font:700 12px/1.6 var(--sans);font-variant-numeric:tabular-nums;color:var(--muted)}
+.chain li.bad{color:var(--accent)}
+.chain li.bad .n{color:var(--accent)}
+.chain li.bad span:last-child{text-decoration:line-through;text-decoration-thickness:1px;text-decoration-color:color-mix(in srgb,var(--accent) 55%,transparent)}
+.chain li.fix{color:var(--ok);font-family:var(--serif);font-size:17px;line-height:1.35}
+.chain li.fix .n{color:var(--ok)}
+.chain li.fix svg{width:16px;height:16px;margin-top:3px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.problem .m{padding-top:20px}
+
+/* II. demo plate */
+.demo{background:var(--navy);color:#ece7dc}
+.demo .k{color:#9fb0c9}
+.demo h2 em{color:#f19a90;font-style:normal}
+.demo .lede{color:#b9c2d0;margin-top:12px;font-size:15px;line-height:1.5}
+.try{list-style:none;display:grid;gap:0;margin-top:22px;border-bottom:1px dashed rgba(255,255,255,.18)}
+.try li{font:500 14px/1.4 var(--sans);color:#d8dee8;padding:7px 0;border-top:1px dashed rgba(255,255,255,.18);display:grid;grid-template-columns:22px 1fr;gap:8px}
+.try li b{font:700 12px/1.6 var(--sans);color:#f19a90;font-variant-numeric:tabular-nums}
+.try kbd{font:500 11px/1 var(--mono);background:rgba(255,255,255,.1);border-radius:3px;padding:2px 5px}
+/* desktop: instructions beside the workbench, both inside one laptop screen */
+.demo{--wbh:clamp(420px,calc(100svh - 262px),600px);grid-template-columns:var(--key) 300px minmax(0,1fr);padding:32px 0!important;align-items:start}
+.demo h2{font-size:clamp(30px,2.6vw,38px)}
+.demo .try li{padding:6px 0}
+.demo-copy{padding:0 0 0 var(--pad)}
+.wbwrap{grid-column:3;padding:0 var(--mpad) 0 32px;margin-top:0}
+.demo .wbt{min-width:420px}
+@media(min-width:981px){
+  .demo .wb-body{height:var(--wbh);grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)}
+  .demo .wb-table{max-height:none;overflow:auto}
+  .demo .wb-side{overflow:hidden}
+  .demo .docs{max-height:none;flex:0 1 auto;min-height:96px}
+  .demo .pv{flex:1 1 0;min-height:190px}
+  .demo .pv-stage{height:auto;flex:1 1 0;min-height:140px;container-type:size}
+  .demo .pv-page{width:auto;height:86cqh}
+}
+@media(max-width:1180px){
+  .demo{grid-template-columns:var(--key) minmax(0,1fr);padding:56px 0!important}
+  .demo-copy{padding:0 var(--pad)}
+  .demo .try{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px}
+  .wbwrap{grid-column:1/-1;padding:0 var(--mpad) 0 calc(var(--key) + var(--pad));margin-top:24px}
+}
+.demo-box{margin-top:0!important}
+.demo-box{--p:#fffdf8;--p2:#f3efe6;--p3:#faf7f1;--l:#e3dccd;--l2:#eee7da;--i:#16202e;--m:#5d6571;--a:#b3261e;--as:#f5dcd8;--g:#2f6b4f;--gs:#dcebe2;--b:#41687a;--bs:#eaf2f5;--w:#8a6a2c;--ws:#f6efe0;--rq:#3d4851;
+  position:relative;margin-top:40px;background:var(--p);color:var(--i);border-radius:14px;overflow:hidden;box-shadow:0 30px 60px -20px rgba(0,0,0,.5);font-size:14px}
+.demo-box button{font-family:inherit;color:inherit;cursor:pointer}
+.demo-box button:disabled{cursor:not-allowed}
+.wb-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--l);background:var(--p2);flex-wrap:wrap}
+.wb-case{display:flex;align-items:center;gap:12px;min-width:0}
+.wb-case .dots{display:flex;gap:6px}.wb-case .dots i{width:10px;height:10px;border-radius:50%;background:#d6cebd;display:block}
+.wb-case b{font:500 17px/1.1 var(--serif);letter-spacing:-.02em}
+.wb-case small{display:block;font:750 11px/1.2 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--m);margin-top:3px}
+.wb-tools{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.xbtn{min-height:30px;display:inline-flex;align-items:center;gap:6px;padding:0 10px;border:1px solid #cfc6b4;background:var(--p);font:750 11px/1 var(--sans)!important;letter-spacing:.05em;text-transform:uppercase;border-radius:2px}
+.xbtn:hover:not(:disabled){border-color:var(--i)}
+.xbtn:disabled{opacity:.45}
+.xbtn .spin{width:11px;height:11px;border:1.5px solid currentColor;border-right-color:transparent;border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.wb-body{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}
+@media(max-width:980px){.wb-body{grid-template-columns:1fr}}
+.wb-table{overflow:auto;max-height:540px;border-right:1px solid var(--l)}
+@media(max-width:980px){.wb-table{border-right:0;border-bottom:1px solid var(--l);max-height:none}}
+.wbt{width:100%;border-collapse:collapse;min-width:560px}
+.wbt th{position:sticky;top:0;z-index:1;background:var(--p);font:750 11px/1.2 var(--sans);letter-spacing:.07em;text-transform:uppercase;color:var(--m);text-align:left;padding:10px 6px;border-bottom:1px solid var(--l)}
+.wbt th.r,.wbt td.r{text-align:right}
+.wbt td{padding:9px 6px;border-bottom:1px solid var(--l2);vertical-align:top}
+.wbt tr.rq td{background:var(--rq);color:#eef1f2;font:650 12.5px/1.3 var(--sans);padding:9px 10px;border:0}
+.wbt tr.rq td b{font-weight:750;margin-right:4px}
+.wbt tr.ct td{background:#ebe8e1;color:#3c4656;font:650 12px/1.3 var(--sans);padding:7px 10px}
+.wbt tr.xr{cursor:pointer}
+.wbt tr.xr:hover td{background:#fbf8f1}
+.wbt tr.xr.sel td{background:#f5eee5}
+.wbt tr.xr.sel td:first-child{box-shadow:inset 3px 0 0 var(--a)}
+.wbt tr.xr.excl td{color:#9ca3a8}
+.wbt tr.xr.excl .name{text-decoration:line-through;text-decoration-color:#c6c2b9}
+.wbt tr.drop-before td{box-shadow:inset 0 2px 0 var(--a)}
+.wbt tr.drop-after td{box-shadow:inset 0 -2px 0 var(--a)}
+.wbt tr.dragging{opacity:.4}
+.wbt td.h{width:18px;color:#b0a894;cursor:grab;font-size:12px;letter-spacing:-2px;padding-left:10px;user-select:none}
+.wbt td.num{font:12px/1.5 var(--mono);white-space:nowrap;color:#1d2c45;width:62px}
+.wbt td.r{font-variant-numeric:tabular-nums;white-space:nowrap;width:46px}
+.wbt td.r.flash{animation:fl .9s}
+@keyframes fl{0%,40%{background:var(--as);color:var(--a)}}
+.name{display:block;font-weight:500;line-height:1.35;outline:none;border-radius:3px}
+.note{display:block;font-size:12px;line-height:1.4;color:var(--m);margin-top:2px;outline:none;border-radius:3px}
+.note.ditto-same{color:#9ca3a8}
+[contenteditable=true]{background:#fff;box-shadow:0 0 0 2px rgba(179,38,30,.3);padding:1px 3px;margin:-1px -3px;cursor:text}
+.ditto{border:0;background:none;color:var(--m);font:500 14px/1 var(--serif);padding:0 4px;margin-left:2px;border-radius:3px;vertical-align:-1px}
+.ditto:hover{background:var(--p2);color:var(--a)}
+.ico{width:26px;height:26px;display:inline-grid;place-items:center;border:1px solid transparent;border-radius:2px;background:none;color:var(--m)}
+.ico:hover{border-color:#cfc6b4;color:var(--i);background:var(--p)}
+.ico svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.st{display:inline-block;width:12px;height:12px;border-radius:50%;margin-top:3px;position:relative;flex:none}
+.st-empty{border:1.5px dashed #b8b7b1}
+.st-processing{border:1.5px solid var(--b);border-right-color:transparent;animation:sp .8s linear infinite}
+.st-unreviewed{border:1.5px solid var(--w)}
+.st-partial{border:1.5px solid var(--w);background:linear-gradient(90deg,var(--w) 50%,transparent 50%)}
+.st-ready{border:1.5px solid var(--g);box-shadow:inset 0 0 0 2px var(--p),inset 0 0 0 6px var(--gs)}
+.st-confirmed{background:var(--g)}
+.st-confirmed::after{content:"";position:absolute;left:4px;top:2px;width:3px;height:6px;border:solid #fff;border-width:0 1.5px 1.5px 0;transform:rotate(45deg)}
+.st-excluded{border:1.5px solid #c6c2b9;background:linear-gradient(135deg,transparent 45%,#c6c2b9 45%,#c6c2b9 55%,transparent 55%)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;padding:12px 14px;font-size:11.5px;color:var(--m);border-top:1px solid var(--l2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend .st{margin:0}
+.wb-side{display:flex;flex-direction:column;min-width:0;background:var(--p3)}
+.side-h{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid var(--l)}
+.side-h small{display:block;font:750 11px/1.2 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--m)}
+.side-h h4{font:500 20px/1.15 var(--serif);letter-spacing:-.02em;margin-top:4px}
+.cbtn{flex:none;min-height:32px;padding:0 12px;border-radius:4px;border:1px solid var(--g);background:var(--g);color:#fff!important;font:650 12px/1 var(--sans)}
+.cbtn:disabled{background:transparent;color:var(--m)!important;border-color:#cfc6b4}
+.cbtn.reopen{background:transparent;color:var(--g)!important}
+.side-why{font-size:11.5px;color:var(--m);padding:0 16px;margin-top:-6px;margin-bottom:10px}
+.docs{display:grid;gap:8px;padding:12px 12px 4px;max-height:260px;overflow:auto}
+.doc{border:1px solid var(--l);background:var(--p);border-radius:6px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center}
+.doc.conf{border-color:#a9c9b6}
+.doc-n{padding:8px 10px 0;min-width:0}
+.doc-n b{display:block;font-weight:500;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.doc-n small{font-size:11px;color:var(--m)}
+.dconf{margin:8px 10px 0;min-height:26px;padding:0 10px;border-radius:4px;border:1px solid #cfc6b4;background:var(--p);font:650 11px/1 var(--sans)}
+.dconf:hover{border-color:var(--g);color:var(--g)}
+.doc.conf .dconf{border-color:var(--g);background:var(--gs);color:var(--g)}
+.rail{grid-column:1/-1;display:flex;gap:8px;overflow-x:auto;padding:10px}
+.th{flex:none;width:52px;aspect-ratio:8.5/11;background:#fff;border:1px solid #ddd5c5;border-radius:3px;position:relative;cursor:pointer;display:grid;place-items:center;transition:border-color .15s,opacity .2s}
+.th:hover{border-color:#1d2c45}
+.th.cur{border-color:var(--a);box-shadow:0 0 0 2px var(--as)}
+.th .pgc{width:70%;display:grid;gap:3px;transition:transform .25s}
+.th .pgc i{display:block;height:2px;background:#e6dfd1;border-radius:1px}
+.th .pgc i:first-child{height:3px;background:#cdbfa8;width:60%}
+.th .tn{position:absolute;bottom:2px;left:4px;font:750 8px/1 var(--sans);color:var(--m)}
+.th.off{opacity:.45}
+.th.off::after{content:"";position:absolute;inset:0;background:linear-gradient(to top right,transparent calc(50% - 1px),var(--a),transparent calc(50% + 1px))}
+.th .ta{position:absolute;top:2px;right:2px;display:flex;gap:2px;opacity:0;transition:opacity .15s}
+.th:hover .ta,.th.cur .ta{opacity:1}
+@media(hover:none){.th .ta{opacity:1}}
+.th .ta span{width:17px;height:17px;display:grid;place-items:center;border-radius:2px;background:#16202e;color:#fff;font-size:10px;line-height:1}
+.th .ta span:hover{background:var(--a)}
+.th.proc{background:repeating-linear-gradient(90deg,#f3efe6 0 10px,#faf7f1 10px 20px);background-size:200% 100%;animation:shim 1s linear infinite}
+@keyframes shim{to{background-position:-40px 0}}
+.empty-docs{border:1.5px dashed #cfc6b4;border-radius:6px;padding:18px;text-align:center;color:var(--m);font-size:13px}
+.empty-docs button{margin-top:10px}
+.pv{margin-top:auto;border-top:1px solid var(--l);display:flex;flex-direction:column}
+.pv-h{display:flex;justify-content:space-between;gap:10px;padding:9px 14px;font-size:12px;color:var(--m);border-bottom:1px solid var(--l2)}
+.pv-h b{color:var(--i);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pv-stage{height:250px;background:#d8d5ce;display:grid;place-items:center;overflow:hidden;position:relative}
+.pv-page{width:160px;aspect-ratio:8.5/11;background:#fff;box-shadow:0 8px 24px rgba(23,32,41,.2);padding:20px 18px 26px;display:flex;flex-direction:column;gap:6px;position:relative;transition:transform .3s ease,opacity .2s}
+.pv-page i{display:block;height:3px;background:#e6dfd1;border-radius:2px}
+.pv-page i.t{height:6px;background:#cdbfa8;margin-bottom:6px}
+.pv-page i.g{height:0;margin:4px 0}
+.pv-foot{position:absolute;left:10px;right:10px;bottom:8px;display:flex;justify-content:space-between;gap:8px;font:650 6px/1.2 var(--sans);color:var(--a)}
+.pv-foot span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pv-foot span:last-child{white-space:nowrap;flex:none}
+.pv-page.off{opacity:.45}
+.pv-page.off::after{content:"EXCLUDED";position:absolute;inset:0;display:grid;place-items:center;font:750 22px/1 var(--sans);letter-spacing:.12em;color:var(--a);transform:rotate(-35deg)}
+.pv-bar{display:flex;justify-content:center;gap:6px;padding:8px;border-top:1px solid var(--l2);background:var(--p)}
+.pv-bar button{min-height:28px;padding:0 10px;border:1px solid #cfc6b4;border-radius:2px;background:var(--p);font:650 11px/1 var(--sans);display:inline-flex;align-items:center;gap:6px}
+.pv-bar button:hover{border-color:var(--i)}
+.pv-empty{height:100%;display:grid;place-items:center;color:#68737d;font-size:13px;padding:20px;text-align:center}
+.wb-foot{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-top:1px solid var(--l);background:var(--p2);font-size:12.5px;color:#3c4656;gap:10px 16px;flex-wrap:wrap}
+.wb-foot .gate{display:inline-flex;align-items:center;gap:8px;font-weight:650}
+.wb-foot .gate.draft{color:var(--a)}.wb-foot .gate.ok{color:var(--g)}
+.wb-foot .gate b{width:8px;height:8px;border-radius:50%;background:currentColor}
+.wb-foot .acts{display:flex;gap:6px}
+.toast{position:absolute;left:50%;bottom:64px;transform:translate(-50%,10px);background:#16202e;color:#fff;font-size:13px;padding:9px 14px;border-radius:6px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:calc(100% - 32px);text-align:center;z-index:5}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.modal{position:absolute;inset:0;background:rgba(22,32,46,.45);display:grid;place-items:center;padding:20px;z-index:6}
+.modal[hidden]{display:none}
+.toc-doc{background:#fff;width:min(720px,100%);max-height:100%;overflow:auto;padding:30px 30px 24px;position:relative;box-shadow:0 24px 80px rgba(17,24,29,.32)}
+.toc-doc h5{font:500 22px/1.2 var(--serif);text-align:center;margin-bottom:16px;letter-spacing:-.01em}
+.toc-doc table{width:100%;border-collapse:collapse;font-size:12px;position:relative}
+.toc-doc th{background:#e9e9e9;text-decoration:underline;font-weight:650;padding:7px;border:1px solid #bbb;text-align:center;font-size:11.5px}
+.toc-doc td{border:1px solid #bbb;padding:7px;text-align:center;vertical-align:middle}
+.toc-doc td.nm,.toc-doc td.ds{width:38%}
+.toc-doc .x{position:absolute;top:10px;right:10px}
+.toc-doc .wm{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;font:750 92px/1 var(--sans);color:rgba(179,38,30,.12);transform:rotate(-30deg);letter-spacing:.1em}
+.toc-doc .meta{margin-top:12px;font-size:11.5px;color:var(--m);text-align:center}
+
+
+/* guided walkthrough + lighter table */
+.legend-d{border-top:1px solid var(--l2)}
+.legend-d summary{cursor:pointer;list-style:none;padding:9px 14px;font:650 11.5px/1 var(--sans);color:var(--m);display:inline-flex;align-items:center;gap:6px}
+.legend-d summary::-webkit-details-marker{display:none}
+.legend-d summary::before{content:"";width:6px;height:6px;border:solid currentColor;border-width:0 1.5px 1.5px 0;transform:rotate(-45deg);transition:transform .2s}
+.legend-d[open] summary::before{transform:rotate(45deg)}
+.legend-d .legend{border-top:0;padding-top:0}
+.wbt tr.xr:not(.sel) .note{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:34ch}
+.tour-ring{position:absolute;z-index:4;pointer-events:none;border:2px solid var(--a);border-radius:6px;box-shadow:0 0 0 5px rgba(179,38,30,.16);transition:left .45s cubic-bezier(.2,.8,.2,1),top .45s cubic-bezier(.2,.8,.2,1),width .45s cubic-bezier(.2,.8,.2,1),height .45s cubic-bezier(.2,.8,.2,1),opacity .2s}
+.tour-ring[hidden]{display:block;opacity:0}
+.tour-ring.press{animation:press .35s ease}
+@keyframes press{50%{box-shadow:0 0 0 9px rgba(179,38,30,.22)}}
+.try li{transition:color .25s,background .25s}
+.try li.on{color:#fff;background:rgba(255,255,255,.07);box-shadow:inset 2px 0 0 #f19a90}
+.try li.on b{color:#fff}
+.try li{padding-left:8px!important;margin-left:-8px}
+@media (prefers-reduced-motion:reduce){.tour-ring{transition:none}.tour-ring.press{animation:none}}
+
+/* III. features as ruled entries */
+.entries{margin-top:56px}
+.entry{display:grid;grid-template-columns:var(--key) minmax(0,1fr) var(--mar);border-top:1px solid var(--rule);padding:34px 0 36px}
+.entry:last-child{border-bottom:1px solid var(--rule)}
+.entry .k{padding-top:10px}
+.entry .b{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1fr);gap:40px}
+.entry h3{font-size:clamp(24px,2.3vw,30px)}
+.entry p{color:var(--ink-2);font-size:16px;max-width:52ch}
+.entry .m{padding-top:6px}
+.entry .mnote{font-size:17px}
+code{font:400 .86em/1 var(--mono);background:var(--paper-2);padding:2px 6px;border-radius:3px;color:var(--navy)}
+
+/* IV. workflow */
+.flow{grid-column:2/4;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:32px var(--mpad) 0 0;border-top:2px solid var(--ink)}
+.step{padding:22px 28px 0 28px;border-left:1px solid var(--rule)}
+.step:first-child{padding-left:var(--pad)}
+.step:first-child{border-left:0}
+.step .n{font:500 32px/1 var(--serif);color:var(--accent);letter-spacing:-.03em;font-variant-numeric:lining-nums}
+.step h3{font-size:22px;margin:10px 0 6px}
+.step p{color:var(--ink-2);font-size:15.5px}
+
+/* V. who */
+.who .entry .b{grid-template-columns:1fr;gap:0}
+.who .entry h3{font-size:clamp(26px,2.6vw,34px);margin-bottom:12px}
+.who .entry.primary h3{font-size:clamp(30px,3.2vw,42px)}
+.who .entry p{max-width:60ch}
+.who ul{list-style:none;display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:16px;font-size:14.5px;color:var(--ink)}
+.who li{display:flex;gap:8px}
+.who li::before{content:"§";font-family:var(--serif);color:var(--accent);font-size:17px;line-height:1.3}
+.forms{margin-top:36px;font:600 14px/1.9 var(--sans);color:var(--ink-2)}
+.forms span:not(:last-child)::after{content:"·";margin:0 10px;color:var(--muted);font-weight:400}
+
+
+/* compact ruled grids (features, audiences) */
+.grid3{grid-column:2/4;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:36px var(--mpad) 0 0;border-top:1px solid var(--rule)}
+.cell{padding:22px 26px 24px;border-left:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.cell:nth-child(3n+1){border-left:0;padding-left:var(--pad)}
+.cell h3{font-size:clamp(21px,1.8vw,25px);display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:8px}
+.cell h3 .id{font:400 11.5px/1 var(--mono);color:var(--navy);letter-spacing:0;flex:none}
+.cell p{color:var(--ink-2);font-size:15px;line-height:1.55}
+.cell p.role{font:500 16px/1.3 var(--serif);color:var(--accent);margin-bottom:8px}
+.who .cell ul{list-style:none;display:grid;gap:4px;margin-top:12px;font-size:14px;color:var(--ink)}
+.who .cell li{display:flex;gap:8px}
+.who .cell li::before{content:"§";font-family:var(--serif);color:var(--accent);font-size:16px;line-height:1.3}
+.who .cell.primary h3{font-size:clamp(23px,2vw,28px)}
+
+/* VI. on-prem */
+.proofline{margin-top:28px;padding-top:18px;border-top:1px solid var(--rule);color:var(--ink-2);font-size:15px}
+.proofline b{font:500 34px/1 var(--serif);letter-spacing:-.03em;color:var(--ink);margin-right:10px;vertical-align:-4px}
+.checks{list-style:none;display:grid;gap:10px;margin-top:22px;max-width:66ch}
+.checks li{display:flex;gap:14px;color:var(--ink-2)}
+.checks svg{flex:none;margin-top:4px;color:var(--ok)}
+.checks strong{color:var(--ink);font-weight:650}
+.terminal{background:#0f141c;color:#d8dee8;border-radius:6px;padding:20px 20px;font:400 12.5px/1.75 var(--mono);box-shadow:var(--shadow);overflow-x:auto;white-space:nowrap;margin-top:22px}
+.terminal .c{color:#8b96a8}.terminal .g{color:#7cc4a0}.terminal .p{color:#f19a90}
+.tally{margin-top:32px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.tally div{display:grid;gap:6px;padding:16px 20px 16px 0}
+.tally div+div{border-left:1px solid var(--rule);padding-left:20px}
+.tally b{font:500 36px/1 var(--serif);letter-spacing:-.035em;font-variant-numeric:lining-nums tabular-nums}
+.tally span{color:var(--ink-2);font-size:14px;line-height:1.4}
+
+/* VII. close */
+.final .badge{width:72px;height:72px;border-width:2px;box-shadow:var(--shadow);margin-bottom:22px}
+.final h2{font-size:clamp(36px,4.6vw,60px);max-width:18ch}
+.final .lede{margin-top:22px}
+.final .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.final .m{align-self:end}
+footer.row{border-top:1px solid var(--rule);padding:20px 0;font-size:14px;color:var(--muted);align-items:center}
+footer .k{padding-top:0}
+footer .badge{width:26px;height:26px;border-width:1px}
+footer .b{display:flex;gap:12px;align-items:center;color:var(--ink-2)}
+
+/* ---- narrow: the keyline stays, the margin folds under the text ---- */
+@media(max-width:1080px){:root{--mar:280px;--pad:36px;--mpad:24px}.grid3{grid-template-columns:repeat(2,minmax(0,1fr))}.cell:nth-child(3n+1){border-left:1px solid var(--rule);padding-left:26px}.cell:nth-child(2n+1){border-left:0;padding-left:var(--pad)}}
+@media(max-width:900px){
+  :root{--key:0px;--pad:16px;--mpad:16px}
+  .sheet{margin:0;box-shadow:none}
+  .sheet::after{display:none}
+  .row,.entry{grid-template-columns:var(--key) minmax(0,1fr)}
+  .k{padding-left:14px;font-size:11.5px}
+  .b{padding:0 16px 0 var(--pad)}
+  .m{grid-column:2;padding:0 16px 0 var(--pad);margin-top:28px}
+  section.row{padding:48px 0}
+  .m:empty{display:none}
+  .grid3{grid-column:2;grid-template-columns:1fr;margin:28px 16px 0 var(--pad)}
+  .cell,.cell:nth-child(3n+1),.cell:nth-child(2n+1){border-left:0;padding:18px 0 20px}
+  .demo-box .wb-table{max-height:440px}
+  .tally{grid-template-columns:1fr}
+  .tally div,.tally div+div{border-left:0;padding:12px 0;grid-template-columns:84px 1fr;align-items:baseline}
+  .tally div+div{border-top:1px solid var(--rule)}
+  .tally b{font-size:30px}
+  nav .navbar{height:60px;gap:12px}
+  nav .navlinks{display:none}
+  .hero{grid-template-columns:var(--key) minmax(0,1fr);padding-top:36px}
+  .hero .copy{padding:0 16px 0 var(--pad)}
+  .proof-page{grid-column:1/-1;margin:40px 22px 0 16px}
+  .pp{padding:22px 16px 14px}
+  .pp .stamp{right:-8px}
+  .toc td:first-child{width:62px;font-size:11px}
+  .chip{display:block;width:max-content;margin:4px 0 0}
+  .forms-line{margin-top:32px}
+  .forms-line .b{grid-column:2}
+  .entry .b{grid-template-columns:1fr;gap:10px}
+  .entry .m{margin-top:14px}
+  .wbwrap{grid-column:1/-1;padding:0 12px}
+  .demo{padding:48px 0!important}
+  .demo .try{grid-template-columns:1fr}
+  section .m:not(:empty){border-left:0}
+  .flow{grid-column:2;grid-template-columns:1fr;margin:28px 16px 0 var(--pad)}
+  .step,.step:first-child{border-left:0;border-bottom:1px solid var(--rule);padding:16px 0 18px}
+}
+
+</style>
+</head>
+<body>
+<div class="sheet">
+
+<nav id="nav" aria-label="Main">
+  <div class="navbar">
+    <a class="logo" href="#top"><span class="badge"><img src="assets/logo-96.png" alt="" width="30" height="30"></span>Exhibitionist</a>
+    <div class="navlinks">
+      <a href="#problem">Why</a>
+      <a href="#demo">See it in action</a>
+      <a href="#features">Features</a>
+      <a href="#who">Who it's for</a>
+      <a href="#onprem">Your server</a>
+    </div>
+    <a class="btn btn-primary" href="#contact">Book a demo</a>
+  </div>
+</nav>
+
+<header class="proof hero" id="top">
+  <div class="k" aria-hidden="true"></div>
+  <div class="copy">
+    <h1>Exhibit packets that <em>number themselves.</em></h1>
+    <p class="lede">Exhibitionist keeps your whole filing in one place: exhibits, pages, the table of exhibits and your letter's citations. Change anything, and every number, page and reference updates with it. A wrong packet can't go out the door.</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="#contact">Book a demo <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn btn-ghost" href="#demo">See it in action</a>
+    </div>
+    <p class="fine">Runs on your own hardware. Built during a real employment-based petition.</p>
+  </div>
+  <div class="proof-page" aria-hidden="true">
+    <div class="pp">
+      <h4>VI. Table of Contents for Exhibits</h4>
+      <table class="toc">
+        <thead><tr><th>Exh.</th><th>Exhibit name</th><th>Page</th></tr></thead>
+        <tbody id="heroToc">
+          <tr style="--i:0"><td>I.A.1</td><td><span class="cat">Awards:</span> National design prize</td><td><span class="pg">14</span></td></tr>
+          <tr style="--i:1"><td>I.A.2</td><td><span class="cat">Awards:</span> Industry fellowship <span class="chip" id="heroChip">−1 page</span></td><td><span class="pg">19</span></td></tr>
+          <tr style="--i:2"><td>II.A.1</td><td><span class="cat">Press:</span> Feature profile</td><td><span class="pg">27</span></td></tr>
+          <tr style="--i:3"><td>II.B.1</td><td><span class="cat">Judging:</span> Panel invitation</td><td><span class="pg">35</span></td></tr>
+          <tr style="--i:4"><td>III.A.1</td><td><span class="cat">Salary:</span> Offer letter</td><td><span class="pg">41</span></td></tr>
+          <tr style="--i:5"><td>III.A.2</td><td><span class="cat">Salary:</span> Payroll records</td><td><span class="pg">44</span></td></tr>
+        </tbody>
+      </table>
+      <ol class="sheet-log" id="heroLog"></ol>
+      <div class="sheet-foot"><span>Exhibit II.A.1 – Press – Feature profile</span><span>Exh p.<span class="pg" id="heroFoot">27</span></span></div>
+      <div class="stamp" id="heroStamp"><span class="ok-t">✓ CONFIRMED</span><span class="draft-t">DRAFT</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="row forms-line">
+  <div class="k" aria-hidden="true"></div>
+  <div class="b">
+    <span class="lbl">Templates ready for</span>
+    <span>O-1A</span><span>O-1B</span><span>EB-1A</span><span>EB-1B</span><span>EB-1C</span><span>EB-2 NIW</span><span>L-1A</span><span>L-1B</span><span>H-1B</span><span>PERM</span><span>I-485</span><span>Your own templates</span>
+  </div>
+</div>
+
+<section class="row problem" id="problem">
+  <div class="k">I.</div>
+  <div class="b">
+    <h2 style="max-width:18ch">One page out, and the whole <em>packet</em> is wrong.</h2>
+    <div class="story">
+      <p>An evidence-heavy petition means dozens of exhibits and hundreds of pages. Your team numbers them, counts pages, stamps footers and writes a letter that cites each one. Then an exhibit splits, two merge, a section moves, and <strong>every number, page count and citation has to be fixed by hand.</strong></p>
+      <p class="pull">“Exhibitionist began on exactly that failure: one page removed after the table was printed.”</p>
+      <p>Now <strong>numbers, page counts, citations and exports all come from one record.</strong></p>
+    </div>
+  </div>
+  <div class="m">
+    <span class="mlabel">One removed page, by hand</span>
+    <ol class="chain" aria-label="How one excluded page breaks a manual packet">
+      <li><span class="n">1</span><span>Table of exhibits exported and proofread</span></li>
+      <li><span class="n">2</span><span>One duplicate page removed from Exhibit I.A.2</span></li>
+      <li class="bad"><span class="n">3</span><span>Every later exhibit now starts one page earlier</span></li>
+      <li class="bad"><span class="n">4</span><span>Printed table no longer matches the packet</span></li>
+      <li class="bad"><span class="n">5</span><span>"See Exh. p.212" in the letter now points to the wrong page</span></li>
+      <li class="fix"><span class="n"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg></span><span>With Exhibitionist, 3–5 update on their own, and the draft stays watermarked until re-confirmed.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="row demo" id="demo">
+  <div class="k">II.</div>
+  <div class="b demo-copy">
+    <h2>The workbench, <em>in miniature.</em></h2>
+    <p class="lede">A working EB-1A model with the real app's rules. Change something and see what reopens. Exports stay DRAFT until every exhibit is confirmed.</p>
+    <ol class="try" aria-label="Things to try">
+      <li><b>1</b><span>Click a page, then ✕ to exclude it</span></li>
+      <li><b>2</b><span>Confirm documents, then the exhibit</span></li>
+      <li><b>3</b><span>Drag ⋮⋮ to reorder</span></li>
+      <li><b>4</b><span>Double-click a name to edit</span></li>
+      <li><b>5</b><span><kbd>⌘Z</kbd> / <kbd>Ctrl Z</kbd> to undo</span></li>
+      <li><b>6</b><span>Open the TOC</span></li>
+    </ol>
+  </div>
+  <div class="wbwrap">
+    <div class="demo-box" id="wb">
+      <div class="wb-bar">
+        <div class="wb-case"><div class="dots"><i></i><i></i><i></i></div><div><b>Demo petitioner · I-140 EB-1A</b><small>Case 2026-014 · Table of exhibits</small></div></div>
+        <div class="wb-tools">
+          <button class="xbtn" data-act="undo" title="Undo (Ctrl/Cmd+Z)">↶ Undo</button>
+          <button class="xbtn" data-act="toc">TOC</button>
+          <button class="xbtn" data-act="pdf">Full PDF</button>
+          <button class="xbtn" data-act="zip">ZIP</button>
+        </div>
+      </div>
+      <div class="wb-body">
+        <div class="wb-table">
+          <table class="wbt"><thead><tr><th></th><th></th><th>Exh.</th><th>Exhibit · relevance</th><th class="r">Pages</th><th class="r">Starts</th><th></th></tr></thead><tbody id="wbRows"></tbody></table>
+          <details class="legend-d"><summary>Status key</summary><div class="legend">
+            <span><i class="st st-empty"></i>Empty</span><span><i class="st st-processing"></i>Processing</span><span><i class="st st-unreviewed"></i>Unreviewed</span><span><i class="st st-partial"></i>Partly reviewed</span><span><i class="st st-ready"></i>Ready</span><span><i class="st st-confirmed"></i>Confirmed</span><span><i class="st st-excluded"></i>Excluded</span>
+          </div></details>
+        </div>
+        <div class="wb-side" id="wbSide"></div>
+      </div>
+      <div class="wb-foot">
+        <span id="wbGate" class="gate"></span>
+        <span id="wbStats"></span>
+        <span class="acts"><button class="xbtn" data-act="tour" title="Watch the workflow play through">Replay walkthrough</button><button class="xbtn" data-act="reset">Reset demo</button></span>
+      </div>
+      <div class="toast" id="wbToast" role="status"></div>
+      <div class="modal" id="wbModal" hidden></div>
+    </div>
+  </div>
+</section>
+
+<section class="row" id="features" style="padding-bottom:24px">
+  <div class="k">III.</div>
+  <div class="b"><h2 style="max-width:20ch">Built for the person who <em>assembles the packet.</em></h2></div>
+  <div class="m"></div>
+  <div class="grid3">
+    <div class="cell"><h3>Numbering from order<span class="id">III.A</span></h3><p>Drag to reorder and identifiers like <code>III.B.2</code> regenerate. Excluded exhibits close the gap.</p></div>
+    <div class="cell"><h3>Page-level review<span class="id">III.B</span></h3><p>Rotate or exclude pages, and merge or move documents between exhibits.</p></div>
+    <div class="cell"><h3>Confirmations that hold<span class="id">III.C</span></h3><p>Document, exhibit, then requirement. Any material edit reopens the approval.</p></div>
+    <div class="cell"><h3>Letter citations that update<span class="id">III.D</span></h3><p>Drag an exhibit into Word. Re-run the resolver and every citation shows the current number.</p></div>
+    <div class="cell"><h3>Every export you file<span class="id">III.E</span></h3><p>Table as PDF, DOCX or PNG; single exhibits, requirements or a ZIP; one bookmarked packet with <code>Exh p.N</code> footers.</p></div>
+    <div class="cell"><h3>Checked before it prints<span class="id">III.F</span></h3><p>Pages say <code>DRAFT</code> until all is confirmed. A pre-print audit stops the print on any mismatch.</p></div>
+  </div>
+</section>
+
+<section class="row" id="workflow" style="padding-top:8px">
+  <div class="k">IV.</div>
+  <div class="b"><h2>From loose PDFs to a <em>filed packet.</em></h2></div>
+  <div class="m"></div>
+  <ol class="flow" style="list-style:none">
+    <li class="step"><div class="n">1</div><h3>Start from a template</h3><p>Pick the petition type, or your firm's saved template.</p></li>
+    <li class="step"><div class="n">2</div><h3>Drop in evidence</h3><p>Upload PDFs into an exhibit. Duplicates are flagged across the case.</p></li>
+    <li class="step"><div class="n">3</div><h3>Curate and confirm</h3><p>Exclude pages, add relevance notes, discuss per exhibit, confirm. Every action is logged.</p></li>
+    <li class="step"><div class="n">4</div><h3>Export with confidence</h3><p>Run the audit and download a packet that matches its table page for page.</p></li>
+  </ol>
+</section>
+
+<section class="row who rule-top" id="who">
+  <div class="k">V.</div>
+  <div class="b">
+    <h2 style="max-width:20ch">For practices where <em>the evidence makes the case.</em></h2>
+  </div>
+  <div class="m"></div>
+  <div class="grid3">
+    <div class="cell primary"><h3>Solo and boutique immigration lawyers<span class="id">V.A</span></h3><p class="role">The buyer</p><p>You sign and own the risk, with no docketing team. Replaces late nights in Acrobat and Word.</p><ul><li>Extraordinary ability and achievement petitions</li><li>Hundreds of exhibit pages</li></ul></div>
+    <div class="cell"><h3>Paralegals and case managers<span class="id">V.B</span></h3><p class="role">Daily user</p><p>Dense, keyboard-friendly, drag-and-drop, with undo and a full change history.</p><ul><li>Per-exhibit chat with the attorney</li></ul></div>
+    <div class="cell"><h3>Firms that keep data on their own hardware<span class="id">V.C</span></h3><p class="role">Confidentiality first</p><p>Immigration histories, financials and payroll stay off someone else's cloud.</p><ul><li>Runs even on a Mac Mini</li></ul></div>
+  </div>
+</section>
+
+<section class="row rule-top" id="onprem">
+  <div class="k">VI.</div>
+  <div class="b">
+    <h2>On your premises, <em>first.</em></h2>
+    <p class="lede" style="margin-top:20px">One Docker Compose package: web app, job worker and PDF workers. Client files stay on your hardware.</p>
+    <ul class="checks">
+      <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg><span><strong>Two-factor sign-in</strong> by SMS or email, with recovery codes.</span></li>
+      <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg><span><strong>Append-only audit trail</strong> of every edit, confirmation and download.</span></li>
+      <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg><span><strong>Per-case access.</strong> Deleted cases keep their history.</span></li>
+      <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg><span><strong>Agent upload API</strong> for automated evidence intake.</span></li>
+    </ul>
+    <p class="proofline"><b>~90%</b> less manual PDF organization on the pilot filing.</p>
+  </div>
+  <div class="m">
+    <span class="mlabel">On the practice's server</span>
+    <div class="terminal" aria-label="Example install commands">
+<span class="c"># install</span><br>
+<span class="p">$</span> cp .env.example .env<br>
+<span class="p">$</span> docker compose up -d --build<br>
+<span class="p">$</span> curl -fsS localhost:3000/up<br>
+<span class="g">ok</span><br><br>
+<span class="c"># before printing a packet</span><br>
+<span class="p">$</span> bin/rails packet:audit<br>
+<span class="g">✓ page selection &amp; order</span><br>
+<span class="g">✓ starting pages &amp; footers</span><br>
+<span class="g">✓ bookmarks &amp; watermark</span><br>
+<span class="g">✓ ZIP checksums &amp; fonts</span><br>
+<span class="g">✓ all pages nonblank</span>
+    </div>
+  </div>
+</section>
+
+<section class="row final rule-top" id="contact">
+  <div class="k">VII.</div>
+  <div class="b">
+    <div class="badge"><img src="assets/logo-256.png" alt="Exhibitionist logo" width="81" height="81"></div>
+    <h2>Your next petition, <em>assembled right</em> the first time.</h2>
+    <p class="lede">A walkthrough of a real filing, and how to install it on your hardware.</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="#contact">Book a demo <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+  </div>
+  <div class="m">
+    <div class="signoff">
+      <span class="mlabel">Sign-off</span>
+      <div class="stamp"><span class="ok-t">✓ OK TO PRINT</span></div>
+      <div class="sig"><span>Reviewer</span><span>Final proof</span></div>
+    </div>
+  </div>
+</section>
+
+<footer class="row">
+  <div class="k" aria-hidden="true"></div>
+  <div class="b" style="grid-column:2/4;justify-content:space-between;flex-wrap:wrap;color:var(--muted)"><span style="color:var(--ink-2);display:flex;align-items:center;gap:10px"><span class="badge"><img src="assets/logo-96.png" alt="" width="20" height="20"></span>Exhibitionist · by Flux Inc.</span><span>Not legal advice. Your attorney decides what goes in the filing.</span></div>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  // ---- hero: exclude a page, the proof gets red-penned, then signed off again ----
+  (function hero(){
+    const proof=document.querySelector('.proof');
+    if(!proof||matchMedia('(prefers-reduced-motion: reduce)').matches){
+      const log=document.getElementById('heroLog');
+      if(log) log.innerHTML='<li class="g"><span>Packet confirmed. Every exhibit signed off.</span></li>';
+      return;
+    }
+    const rows=[...document.querySelectorAll('#heroToc tr')];
+    const pgs=rows.map(r=>r.querySelector('.pg'));
+    const foot=document.getElementById('heroFoot');
+    const stamp=document.getElementById('heroStamp');
+    const chip=document.getElementById('heroChip');
+    const log=document.getElementById('heroLog');
+    const base=[14,19,27,35,41,44];
+    let excluded=false, timers=[], running=false;
+    const at=(ms,fn)=>timers.push(setTimeout(fn,ms));
+    const retrigger=(el,c)=>{el.classList.remove(c);void el.offsetWidth;el.classList.add(c)};
+    const stamped=d=>{stamp.classList.toggle('is-draft',d);retrigger(stamp,'thump')};
+    function addLog(text,cls){
+      const li=document.createElement('li');li.className=cls||'';
+      const t=new Date();li.innerHTML=`<span>${text}</span><time>${t.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}</time>`;
+      log.prepend(li);while(log.children.length>3)log.lastChild.remove();
+    }
+    // a corrected number keeps the struck old value beside it until sign-off
+    const correct=(el,from,to)=>{el.innerHTML=`<s>${from}</s>${to}`;el.dataset.v=to;retrigger(el,'tick')};
+    const clean=()=>[...pgs,foot].forEach(el=>{const s=el.querySelector('s');if(s)s.remove()});
+    function setPages(delta){
+      pgs.forEach((p,i)=>{ if(i<2) return;
+        at(140*(i-2),()=>correct(p,base[i]+(delta?0:-1),base[i]+delta));
+      });
+      at(140,()=>correct(foot,27+(delta?0:-1),27+delta));
+    }
+    function cycle(){
+      excluded=!excluded;
+      rows[1].classList.add('hot');
+      chip.textContent=excluded?'−1 page':'+1 page';
+      chip.classList.toggle('restore',!excluded);
+      chip.classList.add('on');
+      addLog(excluded?'Duplicate page excluded from I.A.2.':'Page restored to I.A.2.','a');
+      at(500,()=>stamped(true));
+      at(900,()=>setPages(excluded?-1:0));
+      at(1900,()=>addLog('Four exhibits repaginated. Letter citations follow.','a'));
+      at(3300,()=>{rows[1].classList.remove('hot');chip.classList.remove('on')});
+      at(3600,()=>{stamped(false);clean();addLog('Exhibit I.A.2 confirmed again.','g')});
+      at(7000,cycle);
+    }
+    function start(){ if(running) return; running=true; at(2600,cycle) }
+    function stop(){ running=false; timers.forEach(clearTimeout); timers=[] }
+    proof.classList.add('play');
+    addLog('Packet confirmed.','g');
+    new IntersectionObserver(([e])=>e.isIntersecting&&!document.hidden?start():stop()).observe(proof);
+    document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
+  })();
+
+  // ---- workbench demo (rules from REQUIREMENTS.md) ----
+  (function workbench(){
+    const box=document.getElementById('wb'); if(!box) return;
+    const $=s=>box.querySelector(s);
+    const ROMAN=['I','II','III','IV','V','VI','VII','VIII'], LET='ABCDEFGHIJ';
+    const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    let uid=0;
+    const pages=n=>Array.from({length:n},()=>({rot:0,off:false}));
+    const doc=(name,n,confirmed=true)=>({name,pages:pages(n),confirmed,proc:false});
+    const ex=(name,note,docs,confirmed)=>({id:++uid,name,note,docs,confirmed,excluded:false});
+    function seed(){ uid=0; return [
+      {title:'Sustained acclaim — criteria evidence',cats:[
+        {title:'Awards and memberships',exs:[
+          ex('National design prize','Nationally recognized prize for excellence in the field.',[doc('Award certificate.pdf',2),doc('Press release.pdf',3)],true),
+          ex('Industry fellowship','Membership requiring outstanding achievement, judged by experts.',[doc('Fellowship letter.pdf',2,false),doc('Selection criteria.pdf',4,false)],false)]},
+        {title:'Published material and judging',exs:[
+          ex('Feature profile, trade magazine','Published material about the beneficiary in major trade media.',[doc('Profile article.pdf',5)],true),
+          ex('Interview, design journal','Published material about the beneficiary in major trade media.',[doc('Interview.pdf',3)],true),
+          ex('Judge, national design awards','Participation as a judge of the work of others in the field.',[doc('Panel invitation.pdf',2),doc('Judging confirmation.pdf',1,false)],false)]}]},
+      {title:'Continuing work in the field',cats:[
+        {title:'Intent and plans',exs:[
+          ex('Personal statement','Planned work in the United States in the same field.',[doc('Statement.pdf',3)],false),
+          ex('Engagement letters','Offers and engagements from U.S. clients.',[],false)]},
+        {title:'Independent support',exs:[
+          ex('Expert recommendation letters','Independent experts attest to sustained acclaim.',[doc('Letter – Prof. Alvarez.pdf',3),doc('Letter – Studio director.pdf',2)],true)]}]}
+    ]}
+    let S, hist=[], prevStarts={};
+    const all=()=>{const o=[];S.reqs.forEach((r,ri)=>r.cats.forEach((c,ci)=>c.exs.forEach((e,ei)=>o.push({e,c,r,ri,ci,ei}))));return o};
+    const find=id=>all().find(x=>x.e.id===id);
+    const incPages=e=>e.docs.reduce((n,d)=>n+(d.proc?0:d.pages.filter(p=>!p.off).length),0);
+    function status(e){
+      if(e.excluded) return 'excluded';
+      if(!e.docs.length) return 'empty';
+      if(e.docs.some(d=>d.proc)) return 'processing';
+      if(e.confirmed) return 'confirmed';
+      const c=e.docs.filter(d=>d.confirmed).length;
+      return c===e.docs.length?'ready':c?'partial':'unreviewed';
+    }
+    const LABEL={excluded:'Excluded',empty:'Empty',processing:'Processing',confirmed:'Confirmed',ready:'Ready to confirm',partial:'Partly reviewed',unreviewed:'Unreviewed'};
+    const canConfirm=e=>!e.excluded&&e.docs.length&&!e.docs.some(d=>d.proc)&&e.docs.every(d=>d.confirmed)&&incPages(e)>0;
+    function derive(){
+      const m=new Map(), inc=[];
+      S.reqs.forEach((r,ri)=>r.cats.forEach((c,ci)=>{let n=0;c.exs.forEach(e=>{
+        if(e.excluded){m.set(e.id,{num:null});return}
+        n++; m.set(e.id,{num:`${ROMAN[ri]}.${LET[ci]}.${n}`,cat:c.title}); inc.push(e)})}));
+      const toc=Math.max(1,Math.ceil(inc.length/6)); let p=toc+1;
+      inc.forEach(e=>{const d=m.get(e.id),n=incPages(e);d.start=n?p:null;d.first=p;p+=n});
+      const pending=inc.filter(e=>!e.confirmed);
+      return {m,inc,toc,total:p-1,pending,ready:inc.length>0&&!pending.length};
+    }
+    // ---- history ----
+    function commit(label,fn){hist.push({s:JSON.stringify(S.reqs),label});if(hist.length>50)hist.shift();fn();render()}
+    function undo(){const h=hist.pop();if(!h){toast('Nothing to undo');return}S.reqs=JSON.parse(h.s);fixSel();render();toast('Undone: '+h.label)}
+    function fixSel(){const x=find(S.sel.id);if(!x){S.sel={id:all()[0].e.id,d:0,p:0};return}const d=x.e.docs[S.sel.d];if(!d){S.sel.d=0;S.sel.p=0}else if(!d.pages[S.sel.p])S.sel.p=0}
+    let tt; function toast(msg){const t=$('#wbToast');t.textContent=msg;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2200)}
+    const reopen=(e,why)=>{if(e.confirmed){e.confirmed=false;toast(why+' · exhibit reopened')}};
+    // ---- render ----
+    const icon=p=>`<svg viewBox="0 0 24 24">${p}</svg>`;
+    const I_EXC=icon('<circle cx="12" cy="12" r="8"/><path d="M6.5 17.5l11-11"/>'), I_RES=icon('<path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 4v4h4"/>');
+    function lines(seedStr,n){let h=0;for(const c of seedStr)h=(h*31+c.charCodeAt(0))>>>0;let o='';for(let i=0;i<n;i++){h=(h*1103515245+12345)>>>0;o+=`<i style="width:${55+h%45}%"></i>`}return o}
+    function render(){
+      const D=derive(); const rows=$('#wbRows'); let html='';
+      S.reqs.forEach((r,ri)=>{html+=`<tr class="rq"><td colspan="7"><b>${ROMAN[ri]}.</b>${esc(r.title)}</td></tr>`;
+        r.cats.forEach((c,ci)=>{html+=`<tr class="ct"><td colspan="7">${LET[ci]}. ${esc(c.title)}</td></tr>`;
+          c.exs.forEach((e,ei)=>{const d=D.m.get(e.id),st=status(e),drag=!e.confirmed&&!e.excluded;
+            const prev=c.exs[ei-1], same=prev&&prev.note===e.note;
+            html+=`<tr class="xr${e.id===S.sel.id?' sel':''}${e.excluded?' excl':''}" data-id="${e.id}" ${drag?'draggable="true"':''}>
+              <td class="h" title="${drag?'Drag to reorder':'Confirmed exhibits are locked'}">${drag?'⋮⋮':''}</td>
+              <td><i class="st st-${st}" title="${LABEL[st]}"></i></td>
+              <td class="num">${d.num||'—'}</td>
+              <td><span class="name" data-edit="name" title="Double-click to edit">${esc(e.name)}</span><span class="note${same?' ditto-same':''}" data-edit="note" title="Double-click to edit">${esc(e.note)}${prev&&!same?`<button class="ditto" data-act="ditto" title="Copy the previous exhibit's relevance note">″</button>`:''}</span></td>
+              <td class="r">${e.excluded?'—':incPages(e)}</td>
+              <td class="r" data-start="${e.id}">${d.start??'—'}</td>
+              <td><button class="ico" data-act="exclude" title="${e.excluded?'Restore exhibit to the filing':'Exclude exhibit from the filing'}">${e.excluded?I_RES:I_EXC}</button></td></tr>`})})});
+      rows.innerHTML=html;
+      Object.entries(prevStarts).forEach(([id,v])=>{const d=D.m.get(+id);if(d&&(d.start??null)!==v){const td=rows.querySelector(`[data-start="${id}"]`);td&&td.classList.add('flash')}});
+      prevStarts={};D.m.forEach((d,id)=>prevStarts[id]=d.start??null);
+      renderSide(D); renderFoot(D);
+    }
+    function renderSide(D){
+      const x=find(S.sel.id), e=x.e, d=D.m.get(e.id), side=$('#wbSide');
+      const st=status(e), ok=canConfirm(e);
+      let why='';
+      if(!e.excluded&&!e.confirmed&&!ok){why=!e.docs.length?'Add a supporting document, or exclude this exhibit.':e.docs.some(d=>d.proc)?'Waiting for page rendering.':incPages(e)===0?'At least one page must be included.':'Confirm every supporting document first.'}
+      let h=`<div class="side-h"><div><small>${e.excluded?'Excluded exhibit':'Exhibit '+d.num} · ${LABEL[st]}</small><h4>${esc(e.name)}</h4></div>
+        ${e.excluded?'':e.confirmed?`<button class="cbtn reopen" data-act="cex">Reopen</button>`:`<button class="cbtn" data-act="cex" ${ok?'':'disabled'}>Confirm exhibit</button>`}</div>`;
+      if(why) h+=`<p class="side-why">${why}</p>`;
+      if(e.excluded) h+=`<div class="docs"><div class="empty-docs">Kept in the workbench, left out of the filing.<br>No number and no pages. Later exhibits closed the gap.<br><button class="xbtn" data-act="exclude">Restore exhibit</button></div></div>`;
+      else if(!e.docs.length) h+=`<div class="docs"><div class="empty-docs">No supporting documents yet.<br><button class="xbtn" data-act="add">+ Add PDF</button></div></div>`;
+      else{
+        h+='<div class="docs">';
+        e.docs.forEach((dc,di)=>{const inc=dc.pages.filter(p=>!p.off).length;
+          h+=`<div class="doc${dc.confirmed?' conf':''}"><div class="doc-n"><b title="${esc(dc.name)}">${esc(dc.name)}</b><small>${dc.proc?'Rendering pages…':`${inc} of ${dc.pages.length} pages included`}</small></div>
+            ${dc.proc?'':`<button class="dconf" data-act="cdoc" data-d="${di}">${dc.confirmed?'✓ Confirmed':'Confirm'}</button>`}
+            <div class="rail">${dc.pages.map((p,pi)=>dc.proc?`<div class="th proc"></div>`:`<div class="th${p.off?' off':''}${S.sel.d===di&&S.sel.p===pi?' cur':''}" role="button" tabindex="0" data-act="page" data-d="${di}" data-p="${pi}" aria-label="Page ${pi+1}${p.off?', excluded':''}"><span class="pgc" style="transform:rotate(${p.rot}deg)${p.rot%180?' scale(.78)':''}">${lines(dc.name+pi,5)}</span><span class="tn">${pi+1}</span><span class="ta"><span data-act="rot" title="Rotate">↻</span><span data-act="off" title="${p.off?'Include page':'Exclude page'}">${p.off?'+':'✕'}</span></span></div>`).join('')}</div></div>`});
+        h+='</div>';
+      }
+      // preview
+      const dc=e.docs[S.sel.d], pg=dc&&!dc.proc&&dc.pages[S.sel.p];
+      if(pg&&!e.excluded){
+        let abs=null;if(!pg.off&&d.first){abs=d.first;for(let i=0;i<S.sel.d;i++)abs+=e.docs[i].pages.filter(p=>!p.off).length;abs+=dc.pages.slice(0,S.sel.p).filter(p=>!p.off).length}
+        h+=`<div class="pv"><div class="pv-h"><b>${esc(dc.name)}</b><span>Page ${S.sel.p+1} of ${dc.pages.length}</span></div>
+          <div class="pv-stage"><div class="pv-page${pg.off?' off':''}" style="transform:rotate(${pg.rot}deg)${pg.rot%180?' scale(.8)':''}"><i class="t" style="width:60%"></i>${lines(dc.name+S.sel.p,7)}<i class="g"></i>${lines(dc.name+'b'+S.sel.p,5)}
+            <div class="pv-foot"><span>Exh ${d.num} - ${esc(d.cat)} - ${esc(e.name)}</span><span>${abs?'Exh p.'+abs:''}</span></div></div></div>
+          <div class="pv-bar"><button data-act="rotl">↺ Rotate</button><button data-act="rotr">↻ Rotate</button><button data-act="poff">${pg.off?'+ Include page':'✕ Exclude page'}</button></div></div>`;
+      } else h+=`<div class="pv"><div class="pv-stage"><div class="pv-empty">${e.excluded?'Excluded exhibits have no pages in the packet.':'Select a page to preview it with its filing labels.'}</div></div></div>`;
+      side.innerHTML=h;
+    }
+    function renderFoot(D){
+      const g=$('#wbGate'), empty=D.inc.filter(e=>!e.docs.length).length;
+      if(D.ready){g.className='gate ok';g.innerHTML='<b></b>All exhibits confirmed · ready to print'}
+      else{g.className='gate draft';g.innerHTML=`<b></b>DRAFT · ${D.pending.length} exhibit${D.pending.length>1?'s':''} awaiting confirmation${empty?` (${empty} empty)`:''}`}
+      const exc=all().filter(x=>x.e.excluded).length;
+      $('#wbStats').textContent=`Packet: ${D.total} pages · TOC pp. 1–${D.toc} · ${D.inc.length} exhibits${exc?` · ${exc} excluded`:''}`;
+      const z=box.querySelector('[data-act="zip"]');z.disabled=!D.ready;z.title=D.ready?'Download every exhibit as its own PDF':'Available once every exhibit is confirmed';
+      box.querySelector('[data-act="undo"]').disabled=!hist.length;
+    }
+    // ---- TOC preview (four established columns, ditto cells merged) ----
+    function showToc(){
+      const D=derive(), rows=D.inc.map(e=>({e,d:D.m.get(e.id)}));
+      let body='';
+      rows.forEach((r,i)=>{let span=0;
+        const prev=rows[i-1];const merged=prev&&prev.d.cat===r.d.cat&&prev.e.note===r.e.note;
+        if(!merged){span=1;while(rows[i+span]&&rows[i+span].d.cat===r.d.cat&&rows[i+span].e.note===r.e.note)span++}
+        body+=`<tr><td>${r.d.num}</td><td class="nm">${esc(r.d.cat)}:<br><br>${esc(r.e.name)}</td>${merged?'':`<td class="ds" rowspan="${span}">${esc(r.e.note)}</td>`}<td>${r.d.start??'—'}</td></tr>`});
+      const m=$('#wbModal');
+      m.innerHTML=`<div class="toc-doc" role="dialog" aria-label="Table of exhibits preview"><button class="xbtn x" data-act="close">Close</button>${D.ready?'':'<div class="wm">DRAFT</div>'}
+        <h5>VI. TABLE OF CONTENTS FOR EXHIBITS</h5><table><thead><tr><th>Exhibit<br>Number</th><th>Exhibit Name</th><th>Description / Why This Is Relevant</th><th>Starting<br>Page No.</th></tr></thead><tbody>${body}</tbody></table>
+        <p class="meta">${D.ready?'Every exhibit confirmed: exported without a watermark.':'Every page is watermarked DRAFT until the whole packet is confirmed.'} Table pages carry no Exh p. footer.</p></div>`;
+      m.hidden=false; m.querySelector('.x').focus();
+    }
+    // ---- events ----
+    box.addEventListener('click',ev=>{
+      const t=ev.target.closest('[data-act]'); const tr=ev.target.closest('tr.xr');
+      if(ev.target.closest('[contenteditable=true]')) return;
+      if(ev.target===$('#wbModal')){$('#wbModal').hidden=true;return}
+      const act=t&&t.dataset.act;
+      if(tr&&act!=='exclude'&&act!=='ditto'){const id=+tr.dataset.id;if(S.sel.id!==id){S.sel={id,d:0,p:0};render()}if(!act)return}
+      if(!act) return;
+      const x=tr?find(+tr.dataset.id):find(S.sel.id), e=x&&x.e;
+      switch(act){
+        case 'undo': undo(); break;
+        case 'reset': S={reqs:seed(),sel:{id:2,d:0,p:0}};hist=[];prevStarts={};render();toast('Demo reset'); break;
+        case 'toc': showToc(); break;
+        case 'close': $('#wbModal').hidden=true; break;
+        case 'pdf': {const b=t;b.disabled=true;b.innerHTML='<span class="spin"></span>Full PDF';const D=derive();
+          setTimeout(()=>{b.disabled=false;b.textContent='Full PDF';toast(`Full PDF built in the background: ${D.total} pages, bookmarked${D.ready?'':', watermarked DRAFT'}`)},1400);break}
+        case 'zip': toast('ZIP built: one PDF per exhibit, plus a checksum manifest'); break;
+        case 'exclude': commit(e.excluded?'Restore exhibit':'Exclude exhibit',()=>{e.excluded=!e.excluded;e.confirmed=false});toast(e.excluded?'Excluded · later exhibits renumbered and repaginated':'Restored · numbering updated'); break;
+        case 'ditto': {const prev=x.c.exs[x.ei-1];commit('Ditto relevance note',()=>{e.note=prev.note;reopen(e,'Relevance note copied')});break}
+        case 'cex': commit(e.confirmed?'Reopen exhibit':'Confirm exhibit',()=>{e.confirmed=!e.confirmed});if(derive().ready)toast('Every exhibit confirmed · DRAFT watermark removed, ZIP unlocked'); break;
+        case 'cdoc': {const dc=e.docs[+t.dataset.d];commit(dc.confirmed?'Reopen document':'Confirm document',()=>{dc.confirmed=!dc.confirmed;if(!dc.confirmed)reopen(e,'Document reopened')});break}
+        case 'add': {const id=e.id;commit('Add PDF',()=>{e.docs.push({name:'Engagement letter.pdf',pages:pages(2),confirmed:false,proc:true})});S.sel.d=0;S.sel.p=0;render();
+          setTimeout(()=>{const y=find(id);if(!y)return;y.e.docs.forEach(d=>d.proc=false);render();toast('Pages rendered · review and confirm')},1300);break}
+        case 'page': case 'rot': case 'off': {
+          const th=ev.target.closest('.th'); const di=+th.dataset.d, pi=+th.dataset.p; S.sel.d=di;S.sel.p=pi;
+          if(act==='page'){render();break}
+          pageEdit(e,di,pi,act==='rot'?'rot':'off');break}
+        case 'rotl': case 'rotr': pageEdit(e,S.sel.d,S.sel.p,act); break;
+        case 'poff': pageEdit(e,S.sel.d,S.sel.p,'off'); break;
+      }
+    });
+    function pageEdit(e,di,pi,kind){
+      const dc=e.docs[di],p=dc.pages[pi];
+      commit(kind==='off'?(p.off?'Include page':'Exclude page'):'Rotate page',()=>{
+        if(kind==='off')p.off=!p.off;else p.rot=(p.rot+(kind==='rotl'?270:90))%360;
+        const was=dc.confirmed||e.confirmed; dc.confirmed=false; e.confirmed=false;
+        if(was) toast((kind==='off'?'Page selection changed':'Page rotated')+' · confirmation reopened');
+      });
+    }
+    box.addEventListener('keydown',ev=>{const th=ev.target.closest('.th');if(th&&(ev.key==='Enter'||ev.key===' ')){ev.preventDefault();th.click()}if(ev.key==='Escape'&&!$('#wbModal').hidden)$('#wbModal').hidden=true});
+    // inline edit: Enter saves, Escape cancels
+    box.addEventListener('dblclick',ev=>{
+      const el=ev.target.closest('[data-edit]'); if(!el) return;
+      const tr=el.closest('tr.xr'), e=find(+tr.dataset.id).e, field=el.dataset.edit, orig=e[field];
+      el.textContent=orig; el.contentEditable='true'; el.focus();
+      const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);
+      let done=false;
+      const finish=save=>{if(done)return;done=true;el.contentEditable='false';const v=el.textContent.trim();
+        if(save&&v&&v!==orig)commit(field==='name'?'Edit exhibit name':'Edit relevance note',()=>{e[field]=v;reopen(e,'Edited')});else render()};
+      el.addEventListener('keydown',k=>{if(k.key==='Enter'){k.preventDefault();finish(true)}if(k.key==='Escape'){k.preventDefault();finish(false)}k.stopPropagation()});
+      el.addEventListener('blur',()=>finish(true),{once:true});
+    });
+    // drag to reorder (unconfirmed, included exhibits only)
+    let dragId=null;
+    const rowsEl=$('#wbRows');
+    rowsEl.addEventListener('dragstart',ev=>{const tr=ev.target.closest('tr.xr');if(!tr)return;dragId=+tr.dataset.id;tr.classList.add('dragging');ev.dataTransfer.effectAllowed='move';ev.dataTransfer.setData('text/plain','Exh '+(derive().m.get(dragId).num||''))});
+    rowsEl.addEventListener('dragend',()=>{dragId=null;rowsEl.querySelectorAll('.dragging,.drop-before,.drop-after').forEach(r=>r.classList.remove('dragging','drop-before','drop-after'))});
+    rowsEl.addEventListener('dragover',ev=>{const tr=ev.target.closest('tr.xr');if(!dragId||!tr||+tr.dataset.id===dragId)return;ev.preventDefault();
+      rowsEl.querySelectorAll('.drop-before,.drop-after').forEach(r=>r.classList.remove('drop-before','drop-after'));
+      const b=tr.getBoundingClientRect();tr.classList.add(ev.clientY<b.top+b.height/2?'drop-before':'drop-after')});
+    rowsEl.addEventListener('drop',ev=>{const tr=ev.target.closest('tr.xr');if(!dragId||!tr)return;ev.preventDefault();
+      const before=tr.classList.contains('drop-before'), src=find(dragId), dst=find(+tr.dataset.id);
+      commit('Reorder exhibits',()=>{src.c.exs.splice(src.c.exs.indexOf(src.e),1);const i=dst.c.exs.indexOf(dst.e);dst.c.exs.splice(before?i:i+1,0,src.e)});
+      toast(src.c===dst.c?'Reordered · numbers and starting pages regenerated':'Moved to '+dst.c.title+' · renumbered')});
+    // Ctrl/Cmd+Z while the demo is on screen
+    let inView=false; new IntersectionObserver(([en])=>inView=en.isIntersecting).observe(box);
+    document.addEventListener('keydown',ev=>{if(!inView||!(ev.metaKey||ev.ctrlKey)||ev.shiftKey||ev.key.toLowerCase()!=='z')return;
+      const a=document.activeElement;if(a&&(a.isContentEditable||/INPUT|TEXTAREA/.test(a.tagName)))return;ev.preventDefault();undo()});
+    S={reqs:seed(),sel:{id:2,d:0,p:0}}; render();
+  })();
+
+  // ---- guided walkthrough: drives the real demo; any real input hands control back ----
+  (function tour(){
+    const box=document.getElementById('wb'); if(!box) return;
+    const q=s=>box.querySelector(s);
+    const steps=[...document.querySelectorAll('.try li')];
+    const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const ring=document.createElement('div'); ring.className='tour-ring'; ring.hidden=true; ring.setAttribute('aria-hidden','true'); box.appendChild(ring);
+    let run=0;
+    const wait=(ms,tok)=>new Promise((res,rej)=>setTimeout(()=>tok===run?res():rej('stopped'),ms));
+    const lit=i=>steps.forEach((li,j)=>li.classList.toggle('on',j===i));
+    const fire=(el,type,init)=>el&&el.dispatchEvent(new (type.startsWith('drag')?DragEvent:MouseEvent)(type,Object.assign({bubbles:true,cancelable:true},init)));
+    function point(el){
+      if(!el) return;
+      const sc=el.closest('.wb-table,.docs,.rail');
+      if(sc){const a=sc.getBoundingClientRect(),r=el.getBoundingClientRect();
+        if(r.top<a.top+30||r.bottom>a.bottom-10) sc.scrollTop+=r.top-a.top-a.height/3;
+        if(r.left<a.left||r.right>a.right) sc.scrollLeft+=r.left-a.left-20;}
+      const b=box.getBoundingClientRect(),r=el.getBoundingClientRect();
+      Object.assign(ring.style,{left:r.left-b.left-4+'px',top:r.top-b.top-4+'px',width:r.width+8+'px',height:r.height+8+'px'});
+      ring.hidden=false;
+    }
+    async function tap(get,tok,after){
+      point(get()); await wait(reduced?250:700,tok);
+      const el=get(); ring.classList.remove('press'); void ring.offsetWidth; ring.classList.add('press');
+      fire(el,'click'); await wait(after||900,tok);
+    }
+    const row=n=>[...box.querySelectorAll('tr.xr')].find(tr=>tr.querySelector('.name').textContent.startsWith(n));
+    function say(msg){const t=q('#wbToast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2800)}
+    function end(){ring.hidden=true;lit(-1);box.classList.remove('touring')}
+    async function play(){
+      const tok=++run; box.classList.add('touring');
+      try{
+        if(!q('#wbModal').hidden) fire(q('[data-act=close]'),'click');
+        fire(q('[data-act=reset]'),'click'); await wait(500,tok);
+        // 1. exclude a duplicate page: later starting pages move
+        lit(0);
+        await tap(()=>q('.th[data-d="1"][data-p="3"]'),tok,500);
+        await tap(()=>q('.th[data-d="1"][data-p="3"] [data-act=off]'),tok,1300);
+        point(row('Feature profile').querySelector('[data-start]')); await wait(1500,tok);
+        // 2. confirm both documents, then the exhibit
+        lit(1);
+        await tap(()=>q('.dconf[data-d="0"]'),tok,600);
+        await tap(()=>q('.dconf[data-d="1"]'),tok,600);
+        await tap(()=>q('.cbtn[data-act=cex]'),tok,1500);
+        // 3. drag an unconfirmed exhibit up: numbers regenerate
+        lit(2);
+        const src=row('Judge'), dst=row('Feature profile');
+        point(src.querySelector('.h')); await wait(800,tok);
+        const dt=new DataTransfer();
+        fire(src,'dragstart',{dataTransfer:dt});
+        point(dst); await wait(700,tok);
+        const y=dst.getBoundingClientRect().top+3;
+        fire(dst,'dragover',{dataTransfer:dt,clientY:y}); await wait(250,tok);
+        fire(dst,'drop',{dataTransfer:dt,clientY:y}); fire(q('#wbRows'),'dragend',{dataTransfer:dt});
+        point(row('Judge')); await wait(1700,tok);
+        // 5. undo the move
+        lit(4);
+        await tap(()=>q('[data-act=undo]'),tok,1600);
+        // 6. the table of exhibits, still watermarked DRAFT
+        lit(5);
+        await tap(()=>q('[data-act=toc]'),tok,2800);
+        fire(q('[data-act=close]'),'click');
+        end(); say('Your turn: click anything to try it yourself.');
+      }catch(e){ if(tok===run) end(); }
+    }
+    const stop=e=>{ if(!e.isTrusted||!box.classList.contains('touring')) return; run++; end(); };
+    ['click','dblclick','keydown','dragstart'].forEach(t=>box.addEventListener(t,stop,{capture:true}));
+    box.addEventListener('click',e=>{ if(e.target.closest('[data-act=tour]')) play(); });
+    if(!reduced){ const io=new IntersectionObserver(([en])=>{ if(en.isIntersecting){ io.disconnect(); setTimeout(()=>{ if(!run) play(); },700); } },{threshold:.35}); io.observe(box); }
+  })();
+})();
+</script>
+</body>
+</html>
