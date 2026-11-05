@@ -160,7 +160,7 @@ nav a.btn-primary,nav a.btn-primary:hover{color:var(--paper);text-decoration:non
 .try li b{font:700 12px/1.6 var(--sans);color:#f19a90;font-variant-numeric:tabular-nums}
 .try kbd{font:500 11px/1 var(--mono);background:rgba(255,255,255,.1);border-radius:3px;padding:2px 5px}
 /* desktop: instructions beside the workbench, both inside one laptop screen */
-.demo{--wbh:clamp(420px,calc(100svh - 262px),600px);grid-template-columns:var(--key) 300px minmax(0,1fr);padding:32px 0!important;align-items:start}
+.demo{--wbh:clamp(400px,calc(100svh - 326px),600px);grid-template-columns:var(--key) 300px minmax(0,1fr);padding:32px 0!important;align-items:start}
 .demo h2{font-size:clamp(30px,2.6vw,38px)}
 .demo .try li{padding:6px 0}
 .demo-copy{padding:0 0 0 var(--pad)}
@@ -334,6 +334,20 @@ nav a.btn-primary,nav a.btn-primary:hover{color:var(--paper);text-decoration:non
 .try li{padding-left:8px!important;margin-left:-8px}
 @media (prefers-reduced-motion:reduce){.tour-ring{transition:none}.tour-ring.press{animation:none}}
 
+/* narration under the workbench (pinned to the screen bottom on narrow layouts) */
+.tour-cap{display:flex;align-items:center;gap:14px;min-height:52px;margin-top:12px;padding:10px 12px 10px 16px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#ece7dc;font:500 15px/1.45 var(--sans);opacity:0;transform:translateY(6px);transition:opacity .3s,transform .3s;pointer-events:none}
+.tour-cap.on{opacity:1;transform:none;pointer-events:auto}
+.tc-step{flex:none;font:700 11.5px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:#f19a90;min-width:52px}
+.tc-text{flex:1;min-width:0}
+.tc-text.swap{animation:tcIn .4s cubic-bezier(.2,.8,.2,1)}
+@keyframes tcIn{from{opacity:0;transform:translateY(4px)}}
+.tour-cap button{flex:none;background:none;border:1px solid rgba(255,255,255,.28);color:inherit;border-radius:4px;padding:7px 11px;font:600 12px/1 var(--sans);cursor:pointer}
+.tour-cap button:hover{border-color:#fff}
+.tour-cap button[hidden]{display:none}
+@media(max-width:1180px){
+  .tour-cap{position:fixed;left:12px;right:12px;bottom:12px;z-index:30;margin:0;background:#16202e;border-color:#2c3545;box-shadow:0 12px 32px -8px rgba(0,0,0,.45);font-size:14px}
+}
+@media (prefers-reduced-motion:reduce){.tour-cap,.tc-text.swap{transition:none;animation:none}}
 /* III. features as ruled entries */
 .entries{margin-top:56px}
 .entry{display:grid;grid-template-columns:var(--key) minmax(0,1fr) var(--mar);border-top:1px solid var(--rule);padding:34px 0 36px}
@@ -379,6 +393,32 @@ code{font:400 .86em/1 var(--mono);background:var(--paper-2);padding:2px 6px;bord
 .who .cell li{display:flex;gap:8px}
 .who .cell li::before{content:"§";font-family:var(--serif);color:var(--accent);font-size:16px;line-height:1.3}
 .who .cell.primary h3{font-size:clamp(23px,2vw,28px)}
+
+
+/* FAQ: heading on the left, one closed accordion on the right */
+.faq-sec{padding:64px var(--mpad) 64px var(--pad);position:relative;z-index:1}
+.faq-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:56px;align-items:start}
+.faq-head{position:sticky;top:100px}
+.faq-head p{margin-top:16px;color:var(--muted);font-size:15px}
+.faq-head a{color:var(--ink-2)}
+.faq-list{border-top:1px solid var(--ink)}
+.faq-list details{border-bottom:1px solid var(--rule)}
+.faq-list summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:18px 4px 18px 0;font:500 18px/1.3 var(--serif);letter-spacing:-.01em;color:var(--ink);transition:color .15s}
+.faq-list summary::-webkit-details-marker{display:none}
+.faq-list summary:hover,.faq-list details[open] summary{color:var(--accent)}
+.faq-i{flex:none;width:12px;height:12px;position:relative}
+.faq-i::before,.faq-i::after{content:"";position:absolute;left:0;right:0;top:5px;height:1.5px;background:currentColor;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.faq-i::after{transform:rotate(90deg)}
+.faq-list details[open] .faq-i::after{transform:rotate(0deg)}
+.faq-a{overflow:hidden}
+.faq-a p{color:var(--ink-2);font-size:15.5px;line-height:1.6;padding:0 48px 20px 0;max-width:62ch}
+.faq-list details[open] .faq-a{animation:faqIn .3s cubic-bezier(.2,.8,.2,1)}
+@keyframes faqIn{from{opacity:0;transform:translateY(-4px)}}
+@media (prefers-reduced-motion:reduce){.faq-list details[open] .faq-a{animation:none}}
+@media(max-width:900px){.faq-sec{padding:48px 16px}.faq-wrap{grid-template-columns:1fr;gap:24px}.faq-head{position:static}.faq-list summary{font-size:17px}.faq-a p{padding-right:8px}}
+.fine-mail{margin-top:16px;font-size:14px;color:var(--muted)}
+.fine-mail a{color:var(--ink-2)}
+@media(max-width:900px){.faq{grid-column:2;grid-template-columns:1fr;margin:20px 16px 0 var(--pad)}.faq summary{font-size:17px}}
 
 /* VI. on-prem */
 .proofline{margin-top:28px;padding-top:18px;border-top:1px solid var(--rule);color:var(--ink-2);font-size:15px}
@@ -460,8 +500,9 @@ footer .b{display:flex;gap:12px;align-items:center;color:var(--ink-2)}
       <a href="#features">Features</a>
       <a href="#who">Who it's for</a>
       <a href="#onprem">Your server</a>
+      <a href="#faq">FAQ</a>
     </div>
-    <a class="btn btn-primary" href="#contact">Book a demo</a>
+    <a class="btn btn-primary" href="mailto:contact@exhibitionist.legal?subject=Exhibitionist%20demo">Book a demo</a>
   </div>
 </nav>
 
@@ -471,7 +512,7 @@ footer .b{display:flex;gap:12px;align-items:center;color:var(--ink-2)}
     <h1>Exhibit packets that <em>number themselves.</em></h1>
     <p class="lede">Exhibitionist keeps your whole filing in one place: exhibits, pages, the table of exhibits and your letter's citations. Change anything, and every number, page and reference updates with it. A wrong packet can't go out the door.</p>
     <div class="cta">
-      <a class="btn btn-primary" href="#contact">Book a demo <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn btn-primary" href="mailto:contact@exhibitionist.legal?subject=Exhibitionist%20demo">Book a demo <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       <a class="btn btn-ghost" href="#demo">See it in action</a>
     </div>
     <p class="fine">Runs on your own hardware. Built during a real employment-based petition.</p>
@@ -570,6 +611,7 @@ footer .b{display:flex;gap:12px;align-items:center;color:var(--ink-2)}
       <div class="toast" id="wbToast" role="status"></div>
       <div class="modal" id="wbModal" hidden></div>
     </div>
+    <div class="tour-cap" id="tourCap" role="status" aria-live="polite"><span class="tc-step"></span><span class="tc-text"></span><button type="button">Stop</button></div>
   </div>
 </section>
 
@@ -644,6 +686,25 @@ footer .b{display:flex;gap:12px;align-items:center;color:var(--ink-2)}
   </div>
 </section>
 
+<section class="faq-sec rule-top" id="faq">
+  <div class="faq-wrap">
+    <div class="faq-head">
+      <h2>Questions, <em>answered.</em></h2>
+      <p>Something else? <a href="mailto:contact@exhibitionist.legal">contact@exhibitionist.legal</a></p>
+    </div>
+    <div class="faq-list">
+      <details name="faq"><summary>Where does client data live?<span class="faq-i" aria-hidden="true"></span></summary><div class="faq-a"><p>On hardware your practice controls. Exhibitionist ships as one Docker Compose package (web app, job worker and PDF workers), and client files stay on your server.</p></div></details>
+      <details name="faq"><summary>What hardware do I need?<span class="faq-i" aria-hidden="true"></span></summary><div class="faq-a"><p>Anything that runs Docker. A Mac Mini is enough.</p></div></details>
+      <details name="faq"><summary>How is it installed?<span class="faq-i" aria-hidden="true"></span></summary><div class="faq-a"><p>We walk you through installing it on your own hardware as part of the demo.</p></div></details>
+      <details name="faq"><summary>Which petitions does it support?<span class="faq-i" aria-hidden="true"></span></summary><div class="faq-a"><p>Templates for O-1A, O-1B, EB-1A, EB-1B, EB-1C, EB-2 NIW, L-1A, L-1B, H-1B, PERM and I-485, plus any template your firm saves.</p></div></details>
+      <details name="faq"><summary>Does it work with my letter in Word?<span class="faq-i" aria-hidden="true"></span></summary><div class="faq-a"><p>Yes. Drag an exhibit into Word to place a citation tied to it, then re-run the resolver to update every number after you reorder.</p></div></details>
+      <details name="faq"><summary>What if something changes after it's confirmed?<span class="faq-i" aria-hidden="true"></span></summary><div class="faq-a"><p>Any material edit reopens that confirmation, and exports stay watermarked DRAFT until everything is confirmed again.</p></div></details>
+      <details name="faq"><summary>Who can see a case?<span class="faq-i" aria-hidden="true"></span></summary><div class="faq-a"><p>Only its members. Every account uses two-factor sign-in, and an append-only audit trail records every edit, confirmation and download.</p></div></details>
+      <details name="faq"><summary>Is this legal advice?<span class="faq-i" aria-hidden="true"></span></summary><div class="faq-a"><p>No. Exhibitionist organizes the filing; your attorney decides what goes in it.</p></div></details>
+    </div>
+  </div>
+</section>
+
 <section class="row final rule-top" id="contact">
   <div class="k">VII.</div>
   <div class="b">
@@ -651,8 +712,9 @@ footer .b{display:flex;gap:12px;align-items:center;color:var(--ink-2)}
     <h2>Your next petition, <em>assembled right</em> the first time.</h2>
     <p class="lede">A walkthrough of a real filing, and how to install it on your hardware.</p>
     <div class="cta">
-      <a class="btn btn-primary" href="#contact">Book a demo <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn btn-primary" href="mailto:contact@exhibitionist.legal?subject=Exhibitionist%20demo">Book a demo <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
+    <p class="fine-mail">Or write to <a href="mailto:contact@exhibitionist.legal">contact@exhibitionist.legal</a></p>
   </div>
   <div class="m">
     <div class="signoff">
@@ -856,7 +918,7 @@ footer .b{display:flex;gap:12px;align-items:center;color:var(--ink-2)}
       m.innerHTML=`<div class="toc-doc" role="dialog" aria-label="Table of exhibits preview"><button class="xbtn x" data-act="close">Close</button>${D.ready?'':'<div class="wm">DRAFT</div>'}
         <h5>VI. TABLE OF CONTENTS FOR EXHIBITS</h5><table><thead><tr><th>Exhibit<br>Number</th><th>Exhibit Name</th><th>Description / Why This Is Relevant</th><th>Starting<br>Page No.</th></tr></thead><tbody>${body}</tbody></table>
         <p class="meta">${D.ready?'Every exhibit confirmed: exported without a watermark.':'Every page is watermarked DRAFT until the whole packet is confirmed.'} Table pages carry no Exh p. footer.</p></div>`;
-      m.hidden=false; m.querySelector('.x').focus();
+      m.hidden=false; m.querySelector('.x').focus({preventScroll:true});
     }
     // ---- events ----
     box.addEventListener('click',ev=>{
@@ -929,17 +991,25 @@ footer .b{display:flex;gap:12px;align-items:center;color:var(--ink-2)}
     S={reqs:seed(),sel:{id:2,d:0,p:0}}; render();
   })();
 
-  // ---- guided walkthrough: drives the real demo; any real input hands control back ----
+  // ---- guided walkthrough: drives the real demo, narrates each beat; any real input hands control back ----
   (function tour(){
     const box=document.getElementById('wb'); if(!box) return;
     const q=s=>box.querySelector(s);
     const steps=[...document.querySelectorAll('.try li')];
     const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
     const ring=document.createElement('div'); ring.className='tour-ring'; ring.hidden=true; ring.setAttribute('aria-hidden','true'); box.appendChild(ring);
+    const cap=document.getElementById('tourCap');
     let run=0;
-    const wait=(ms,tok)=>new Promise((res,rej)=>setTimeout(()=>tok===run?res():rej('stopped'),ms));
-    const lit=i=>steps.forEach((li,j)=>li.classList.toggle('on',j===i));
+    const wait=(ms,tok)=>new Promise((res,rej)=>setTimeout(()=>tok===run?res():rej('stopped'),reduced?Math.min(ms,600):ms));
     const fire=(el,type,init)=>el&&el.dispatchEvent(new (type.startsWith('drag')?DragEvent:MouseEvent)(type,Object.assign({bubbles:true,cancelable:true},init)));
+    // narrate: light the matching instruction and show what is happening, in plain words
+    function say(i,text,final){
+      steps.forEach((li,j)=>li.classList.toggle('on',j===i));
+      cap.querySelector('.tc-step').textContent=final?'Done':`Step ${steps[i].querySelector('b').textContent}`;
+      const tx=cap.querySelector('.tc-text'); tx.classList.remove('swap'); void tx.offsetWidth; tx.textContent=text; tx.classList.add('swap');
+      cap.querySelector('button').hidden=!!final;
+      cap.classList.add('on');
+    }
     function point(el){
       if(!el) return;
       const sc=el.closest('.wb-table,.docs,.rail');
@@ -951,53 +1021,60 @@ footer .b{display:flex;gap:12px;align-items:center;color:var(--ink-2)}
       ring.hidden=false;
     }
     async function tap(get,tok,after){
-      point(get()); await wait(reduced?250:700,tok);
+      point(get()); await wait(1300,tok);
       const el=get(); ring.classList.remove('press'); void ring.offsetWidth; ring.classList.add('press');
-      fire(el,'click'); await wait(after||900,tok);
+      fire(el,'click'); await wait(after||1500,tok);
     }
     const row=n=>[...box.querySelectorAll('tr.xr')].find(tr=>tr.querySelector('.name').textContent.startsWith(n));
-    function say(msg){const t=q('#wbToast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2800)}
-    function end(){ring.hidden=true;lit(-1);box.classList.remove('touring')}
+    function end(keep){ring.hidden=true;steps.forEach(li=>li.classList.remove('on'));box.classList.remove('touring');if(!keep)cap.classList.remove('on')}
     async function play(){
       const tok=++run; box.classList.add('touring');
       try{
         if(!q('#wbModal').hidden) fire(q('[data-act=close]'),'click');
-        fire(q('[data-act=reset]'),'click'); await wait(500,tok);
-        // 1. exclude a duplicate page: later starting pages move
-        lit(0);
-        await tap(()=>q('.th[data-d="1"][data-p="3"]'),tok,500);
-        await tap(()=>q('.th[data-d="1"][data-p="3"] [data-act=off]'),tok,1300);
-        point(row('Feature profile').querySelector('[data-start]')); await wait(1500,tok);
-        // 2. confirm both documents, then the exhibit
-        lit(1);
-        await tap(()=>q('.dconf[data-d="0"]'),tok,600);
-        await tap(()=>q('.dconf[data-d="1"]'),tok,600);
-        await tap(()=>q('.cbtn[data-act=cex]'),tok,1500);
-        // 3. drag an unconfirmed exhibit up: numbers regenerate
-        lit(2);
+        fire(q('[data-act=reset]'),'click'); await wait(700,tok);
+        // 1. exclude a duplicate page
+        say(0,'This page is in here twice. Let\'s pick it…');
+        await tap(()=>q('.th[data-d="1"][data-p="3"]'),tok,1400);
+        say(0,'…and take it out of the packet.');
+        await tap(()=>q('.th[data-d="1"][data-p="3"] [data-act=off]'),tok,1800);
+        say(0,'One page fewer. All the page numbers after it fixed themselves.');
+        point(row('Feature profile').querySelector('[data-start]')); await wait(3600,tok);
+        // 2. confirm documents, then the exhibit
+        say(1,'First, we check each document and say it looks good.');
+        await tap(()=>q('.dconf[data-d="0"]'),tok,1100);
+        await tap(()=>q('.dconf[data-d="1"]'),tok,1500);
+        say(1,'Both look good. Now we can OK the whole exhibit.');
+        await tap(()=>q('.cbtn[data-act=cex]'),tok,1400);
+        say(1,'Done! One less thing left to check.');
+        point(q('#wbGate')); await wait(3200,tok);
+        // 3. drag to reorder
+        say(2,'Now let\'s move this exhibit up the list…');
         const src=row('Judge'), dst=row('Feature profile');
-        point(src.querySelector('.h')); await wait(800,tok);
+        point(src.querySelector('.h')); await wait(1800,tok);
         const dt=new DataTransfer();
         fire(src,'dragstart',{dataTransfer:dt});
-        point(dst); await wait(700,tok);
+        point(dst); await wait(1300,tok);
         const y=dst.getBoundingClientRect().top+3;
-        fire(dst,'dragover',{dataTransfer:dt,clientY:y}); await wait(250,tok);
+        fire(dst,'dragover',{dataTransfer:dt,clientY:y}); await wait(500,tok);
         fire(dst,'drop',{dataTransfer:dt,clientY:y}); fire(q('#wbRows'),'dragend',{dataTransfer:dt});
-        point(row('Judge')); await wait(1700,tok);
-        // 5. undo the move
-        lit(4);
-        await tap(()=>q('[data-act=undo]'),tok,1600);
-        // 6. the table of exhibits, still watermarked DRAFT
-        lit(5);
-        await tap(()=>q('[data-act=toc]'),tok,2800);
+        say(2,'It\'s number 1 now. Every number below it changed by itself.');
+        point(row('Judge')); await wait(3600,tok);
+        // 5. undo
+        say(4,'Oops? Undo puts it back the way it was.');
+        await tap(()=>q('[data-act=undo]'),tok,2600);
+        // 6. table of exhibits
+        say(5,'Here\'s the list of every exhibit. It says DRAFT until everything is checked.');
+        await tap(()=>q('[data-act=toc]'),tok,5200);
         fire(q('[data-act=close]'),'click');
-        end(); say('Your turn: click anything to try it yourself.');
+        end(true); say(-1,'Your turn! Click anything to try it.',true);
+        setTimeout(()=>{ if(tok===run&&!box.classList.contains('touring')) cap.classList.remove('on') },6000);
       }catch(e){ if(tok===run) end(); }
     }
     const stop=e=>{ if(!e.isTrusted||!box.classList.contains('touring')) return; run++; end(); };
     ['click','dblclick','keydown','dragstart'].forEach(t=>box.addEventListener(t,stop,{capture:true}));
+    cap.querySelector('button').addEventListener('click',()=>{ run++; end(); });
     box.addEventListener('click',e=>{ if(e.target.closest('[data-act=tour]')) play(); });
-    if(!reduced){ const io=new IntersectionObserver(([en])=>{ if(en.isIntersecting){ io.disconnect(); setTimeout(()=>{ if(!run) play(); },700); } },{threshold:.35}); io.observe(box); }
+    if(!reduced){ const io=new IntersectionObserver(([en])=>{ if(en.isIntersecting){ io.disconnect(); setTimeout(()=>{ if(!run) play(); },800); } },{threshold:.35}); io.observe(box); }
   })();
 })();
 </script>
